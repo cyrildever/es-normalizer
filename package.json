@@ -1,0 +1,38 @@
+{
+  "name": "es-normalizer",
+  "version": "1.0.0",
+  "description": "Contact data normalization adapted from the Empreinte Sociométrique's normalizers",
+  "main": "dist/src/typescript/index.js",
+  "types": "dist/src/typescript/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": ""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/edgewhere/es-normalizer.git"
+  },
+  "keywords": [
+    "data",
+    "contact",
+    "normalization",
+    "empreinte sociometrique"
+  ],
+  "author": "Edgewhere @edgewhere",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/edgewhere/es-normalizer/issues"
+  },
+  "homepage": "https://github.com/edgewhere/es-normalizer#readme",
+  "devDependencies": {
+    "@types/chai": "^4.2.7",
+    "@types/mocha": "^5.2.7",
+    "@types/node": "^13.1.8",
+    "browserify": "^16.5.0",
+    "chai": "^4.2.0",
+    "live-server": "^1.2.1",
+    "mocha": "^6.2.2",
+    "ts-node": "^8.6.2",
+    "typescript": "^3.7.5"
+  }
+}
