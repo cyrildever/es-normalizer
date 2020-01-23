@@ -2,7 +2,7 @@ import * as chai from 'chai'
 const should = chai.should()
 import 'mocha'
 
-import { Email, normalize, uniformize } from '../../../lib/src/typescript/index'
+import { normalize, uniformize, Email, FirstName } from '../../../lib/src/typescript/index'
 
 describe('Normalize', () => {
   describe('uniformize', () => {
@@ -34,6 +34,25 @@ describe('Normalize', () => {
       const ref = 'cdever@edgewhere.fr'
       const found = normalize(ref, Email)
       found.some().should.equal(ref)
+    })
+  })
+
+  describe('FirstName', () => {
+    it('should work as expected', () => {
+      let normalized = normalize('Cyril', FirstName)
+      normalized.some().should.equal('CYRIL')
+
+      normalized = normalize('J Louis', FirstName)
+      normalized.some().should.equal('JEAN LOUIS')
+
+      normalized = normalize('Unknown', FirstName)
+      normalized.some().should.equal('UNKNOWN')
+
+      normalized = normalize('#@~*%', FirstName)
+      should.equal(normalized.isNone(), true)
+
+      normalized = normalize('', FirstName)
+      should.equal(normalized.isNone(), true)
     })
   })
 })

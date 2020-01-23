@@ -3,3 +3,4 @@ node_modules
 lib
 test
 *.tgz
+dist/lib/src/typescript/Dictionary/*.dico.d.ts
