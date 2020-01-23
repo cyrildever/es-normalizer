@@ -14,7 +14,11 @@ describe('Normalize', () => {
     })
     it('should reject invalid email', () => {
       const data = 'pretty-long string that\'s not an email@at_all.com'
-      const found = normalize(data, Email)
+      let found = normalize(data, Email)
+      should.equal(found.isNone(), true)
+
+      const tooShort = 't@t.t'
+      found = normalize(tooShort, Email)
       should.equal(found.isNone(), true)
     })
     it('should not change a valid e-mail', () => {
