@@ -2,9 +2,18 @@ import * as chai from 'chai'
 const should = chai.should()
 import 'mocha'
 
-import { Email, normalize } from '../../../lib/src/typescript/index'
+import { Email, normalize, uniformize } from '../../../lib/src/typescript/index'
 
 describe('Normalize', () => {
+  describe('uniformize', () => {
+    it('should dismiss any weird character', () => {
+      const data = ' cAfé#@~eT*%chocolAT )'
+      const found = uniformize(data)
+      const expected = "CAFE ET CHOCOLAT"
+      found.some().should.equal(expected)
+    })
+  })
+
   describe('Email', () => {
     it('should normalize safely', () => {
       const expected = 'cdever@edgewhere.fr'
