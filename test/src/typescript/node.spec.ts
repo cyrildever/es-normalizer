@@ -2,7 +2,7 @@ import * as chai from 'chai'
 const should = chai.should()
 import 'mocha'
 
-import { normalize, uniformize, Email, FirstName } from '../../../lib/src/typescript/index'
+import { normalize, uniformize, Email, FirstName, Mobile } from '../../../lib/src/typescript/index'
 
 describe('Normalize', () => {
   describe('uniformize', () => {
@@ -52,6 +52,20 @@ describe('Normalize', () => {
       should.equal(normalized.isNone(), true)
 
       normalized = normalize('', FirstName)
+      should.equal(normalized.isNone(), true)
+    })
+  })
+
+  describe('Mobile', () => {
+    it('should normalize correctly', () => {
+      let normalized = normalize('0623456789', Mobile)
+      normalized.some().should.equal('+33 (0) 623 456 789')
+
+      normalized = normalize('07-23-45-67-89', Mobile)
+      normalized.some().should.equal('+33 (0) 723 456 789')
+
+      // Valid landline phone numbers aren't mobile phones
+      normalized = normalize('01.23.45.67.89', Mobile)
       should.equal(normalized.isNone(), true)
     })
   })
