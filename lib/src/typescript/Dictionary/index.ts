@@ -21,4 +21,7 @@ export const Dictionary = (set: { [key: string]: string }): Dictionary => ({
 export const getSet = (data: string) =>
   Object.fromEntries(data.split(/\n/g).map(line => line.split(/\t/g, 2)))
 
+export * from './address.dico'
 export * from './firstname.dico'
+export * from './gender.dico'
+export * from './title.dico'
