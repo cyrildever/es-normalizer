@@ -56,6 +56,9 @@ describe('Normalize', () => {
       let found = normalize(data, Email)
       should.equal(found.isNone(), true)
 
+      const normalized = normalize('gregoire.albizzati@edge@where.fr', Email)
+      should.equal(normalized.isNone(), true)
+
       const tooShort = 't@t.t'
       found = normalize(tooShort, Email)
       should.equal(found.isNone(), true)
