@@ -2,7 +2,7 @@ import * as chai from 'chai'
 chai.should()
 import 'mocha'
 
-import { normalize, uniformize, AddressLine, City, CodePostalFrance, Email, FirstName, Mobile, PhoneNumber } from '../../../lib/src/typescript/index'
+import { normalize, uniformize, AddressLine, City, CodePostalFrance, Email, FirstName, Mobile, PhoneNumber, Title } from '../../../lib/src/typescript/index'
 
 describe('Normalize', () => {
   describe('uniformize', () => {
@@ -157,6 +157,25 @@ describe('Normalize', () => {
 
       normalized = normalize('not-even-close-to-a-phone-number', PhoneNumber)
       normalized.isNone().should.be.true
+    })
+  })
+
+  describe('Title', () => {
+    it('should return the appropriate codes', () => {
+      let normalized = normalize('Mademoiselle', Title)
+      normalized.some().should.equal('2')
+
+      normalized = normalize('Docteur', Title)
+      normalized.some().should.equal('0')
+
+      normalized = normalize(' ', Title)
+      normalized.isNone().should.be.true
+
+      normalized = normalize('1', Title)
+      normalized.some().should.equal('1')
+
+      normalized = normalize('Monsieur et Madame', Title)
+      normalized.some().should.equal('0')
     })
   })
 })

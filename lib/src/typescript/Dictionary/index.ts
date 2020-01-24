@@ -24,5 +24,4 @@ export const getSet = (data: string) =>
 
 export * from './address.dico'
 export * from './firstname.dico'
-export * from './gender.dico'
 export * from './title.dico'
