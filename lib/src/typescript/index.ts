@@ -20,6 +20,7 @@ export const uniformize = (data: string): Maybe<string> => {
   return Some(uniformized)
 }
 
+export * from './CodePostalFrance'
 export * from './Dictionary'
 export * from './Email'
 export * from './FirstName'

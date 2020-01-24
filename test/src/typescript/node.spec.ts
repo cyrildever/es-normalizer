@@ -2,7 +2,7 @@ import * as chai from 'chai'
 const should = chai.should()
 import 'mocha'
 
-import { normalize, uniformize, Email, FirstName, Mobile, PhoneNumber } from '../../../lib/src/typescript/index'
+import { normalize, uniformize, CodePostalFrance, Email, FirstName, Mobile, PhoneNumber } from '../../../lib/src/typescript/index'
 
 describe('Normalize', () => {
   describe('uniformize', () => {
@@ -14,6 +14,20 @@ describe('Normalize', () => {
     })
   })
 
+  describe('CodePostalFrance', () => {
+    it('should normalize safely', () => {
+      let normalized = normalize('12345 ', CodePostalFrance)
+      normalized.some().should.equal('12345')
+
+      normalized = normalize('2A165', CodePostalFrance)
+      normalized.some().should.equal('20165')
+    })
+    it('should reject any invalid code postal', () => {
+      const normalized = normalize('aghfkhgk', CodePostalFrance)
+      should.equal(normalized.isNone(), true)
+    })
+  })
+
   describe('Email', () => {
     it('should normalize safely', () => {
       const expected = 'cdever@edgewhere.fr'
@@ -21,7 +35,7 @@ describe('Normalize', () => {
       const found = normalize(data, Email)
       found.some().should.equal(expected)
     })
-    it('should reject invalid email', () => {
+    it('should reject any invalid email', () => {
       const data = 'pretty-long string that\'s not an email@at_all.com'
       let found = normalize(data, Email)
       should.equal(found.isNone(), true)
@@ -64,7 +78,7 @@ describe('Normalize', () => {
       normalized = normalize('07-23-45-67-89', Mobile)
       normalized.some().should.equal('+33 (0) 723 456 789')
     })
-    it('should reject landline phone number', () => {
+    it('should reject landline phone numbers', () => {
       const normalized = normalize('01.23.45.67.89', Mobile)
       should.equal(normalized.isNone(), true)
     })
