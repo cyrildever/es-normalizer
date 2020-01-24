@@ -1,8 +1,8 @@
 import * as chai from 'chai'
-const should = chai.should()
+chai.should()
 import 'mocha'
 
-import { normalize, uniformize, City, CodePostalFrance, Email, FirstName, Mobile, PhoneNumber } from '../../../lib/src/typescript/index'
+import { normalize, uniformize, Address4, City, CodePostalFrance, Email, FirstName, Mobile, PhoneNumber } from '../../../lib/src/typescript/index'
 
 describe('Normalize', () => {
   describe('uniformize', () => {
@@ -11,6 +11,19 @@ describe('Normalize', () => {
       const found = uniformize(data)
       const expected = "CAFE ET CHOCOLAT"
       found.some().should.equal(expected)
+    })
+  })
+
+  describe('Address4', () => {
+    it('should normalize safely', () => {
+      let normalized = normalize('128 r du Faubourg Saint Honoré ', Address4)
+      normalized.some().should.equal('128 RUE FBG ST HONORE')
+
+      normalized = normalize('*** rue \nHenner', Address4)
+      normalized.some().should.equal('RUE HENNER')
+
+      normalized = normalize('$µ%*+^)@', Address4)
+      normalized.isNone().should.be.true
     })
   })
 
@@ -40,7 +53,7 @@ describe('Normalize', () => {
     })
     it('should reject any invalid code postal', () => {
       const normalized = normalize('aghfkhgk', CodePostalFrance)
-      should.equal(normalized.isNone(), true)
+      normalized.isNone().should.be.true
     })
   })
 
@@ -54,14 +67,14 @@ describe('Normalize', () => {
     it('should reject any invalid email', () => {
       const data = 'pretty-long string that\'s not an email@at_all.com'
       let found = normalize(data, Email)
-      should.equal(found.isNone(), true)
+      found.isNone().should.be.true
 
       const normalized = normalize('gregoire.albizzati@edge@where.fr', Email)
-      should.equal(normalized.isNone(), true)
+      normalized.isNone().should.be.true
 
       const tooShort = 't@t.t'
       found = normalize(tooShort, Email)
-      should.equal(found.isNone(), true)
+      found.isNone().should.be.true
     })
     it('should not change a valid e-mail', () => {
       const ref = 'cdever@edgewhere.fr'
@@ -82,10 +95,10 @@ describe('Normalize', () => {
       normalized.some().should.equal('UNKNOWN')
 
       normalized = normalize('#@~*%', FirstName)
-      should.equal(normalized.isNone(), true)
+      normalized.isNone().should.be.true
 
       normalized = normalize('', FirstName)
-      should.equal(normalized.isNone(), true)
+      normalized.isNone().should.be.true
     })
   })
 
@@ -99,7 +112,7 @@ describe('Normalize', () => {
     })
     it('should reject landline phone numbers', () => {
       const normalized = normalize('01.23.45.67.89', Mobile)
-      should.equal(normalized.isNone(), true)
+      normalized.isNone().should.be.true
     })
   })
 
@@ -120,10 +133,10 @@ describe('Normalize', () => {
     })
     it('should reject invalid phone numbers', () => {
       let normalized = normalize('01-23-45-67-8-10', PhoneNumber)
-      should.equal(normalized.isNone(), true)
+      normalized.isNone().should.be.true
 
       normalized = normalize('not-even-close-to-a-phone-number', PhoneNumber)
-      should.equal(normalized.isNone(), true)
+      normalized.isNone().should.be.true
     })
   })
 })

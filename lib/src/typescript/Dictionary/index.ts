@@ -7,10 +7,11 @@ export interface Dictionary {
 const translateText = (set: { [key: string]: string }) => (input: string): string =>
   input.split(' ')
     .map((word: string) => translateWord(set)(word))
+    .filter(str => str !== "")
     .join(' ')
 
 const translateWord = (set: { [key: string]: string }) => (input: string): string =>
-  set[input] || input
+  set[input] === undefined ? input : set[input]
 
 export const Dictionary = (set: { [key: string]: string }): Dictionary => ({
   set,
