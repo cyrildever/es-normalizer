@@ -3,7 +3,7 @@ import { Maybe, None, Some } from 'monet'
 export const normalize = (data: string, normalizer: (d: string) => Maybe<string>) => normalizer(data)
 
 export const uniformize = (data: string): Maybe<string> => {
-  const normalized = data.trim().toLowerCase().normalize('NFD')
+  const normalized = data.trim().toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '')
   if (normalized === "") {
     return None<string>()
   }
@@ -20,7 +20,7 @@ export const uniformize = (data: string): Maybe<string> => {
   return Some(uniformized)
 }
 
-export * from './Address4'
+export * from './AddressLine'
 export * from './City'
 export * from './CodePostalFrance'
 export * from './Dictionary'

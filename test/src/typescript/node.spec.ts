@@ -2,7 +2,7 @@ import * as chai from 'chai'
 chai.should()
 import 'mocha'
 
-import { normalize, uniformize, Address4, City, CodePostalFrance, Email, FirstName, Mobile, PhoneNumber } from '../../../lib/src/typescript/index'
+import { normalize, uniformize, AddressLine, City, CodePostalFrance, Email, FirstName, Mobile, PhoneNumber } from '../../../lib/src/typescript/index'
 
 describe('Normalize', () => {
   describe('uniformize', () => {
@@ -14,16 +14,36 @@ describe('Normalize', () => {
     })
   })
 
-  describe('Address4', () => {
-    it('should normalize safely', () => {
-      let normalized = normalize('128 r du Faubourg Saint Honoré ', Address4)
+  describe('AddressLine', () => {
+    it('should normalize safely any type of address line', () => {
+      // French address line 2
+      let normalized = normalize('c/o Mr et Mme Dupont', AddressLine)
+      normalized.some().should.equal('C O MR MME DUPONT')
+
+      // French address line 3
+      normalized = normalize('Bât. 4, escalier G', AddressLine)
+      normalized.some().should.equal('BAT 4 ESC G')
+
+      // French address line 4
+      normalized = normalize('128 r du Faubourg Saint Honoré ', AddressLine)
       normalized.some().should.equal('128 RUE FBG ST HONORE')
 
-      normalized = normalize('*** rue \nHenner', Address4)
+      normalized = normalize('*** rue \nHenner', AddressLine)
       normalized.some().should.equal('RUE HENNER')
 
-      normalized = normalize('$µ%*+^)@', Address4)
+      normalized = normalize('$µ%*+^)@', AddressLine)
       normalized.isNone().should.be.true
+
+      // French address line 5
+      normalized = normalize('Lieu-dit du domaine Vert', AddressLine)
+      normalized.some().should.equal('LIEU DIT DOM VERT')
+
+      // French address line 6
+      normalized = normalize('$.75009        Paris', AddressLine)
+      normalized.some().should.equal('75009 PARIS')
+
+      normalized = normalize('75948 Paris Cedex 19', AddressLine)
+      normalized.some().should.equal('75948 PARIS CDX 19')
     })
   })
 
