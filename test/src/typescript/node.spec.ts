@@ -2,7 +2,7 @@ import * as chai from 'chai'
 const should = chai.should()
 import 'mocha'
 
-import { normalize, uniformize, CodePostalFrance, Email, FirstName, Mobile, PhoneNumber } from '../../../lib/src/typescript/index'
+import { normalize, uniformize, City, CodePostalFrance, Email, FirstName, Mobile, PhoneNumber } from '../../../lib/src/typescript/index'
 
 describe('Normalize', () => {
   describe('uniformize', () => {
@@ -11,6 +11,22 @@ describe('Normalize', () => {
       const found = uniformize(data)
       const expected = "CAFE ET CHOCOLAT"
       found.some().should.equal(expected)
+    })
+  })
+
+  describe('City', () => {
+    it('should normalize safely', () => {
+      let normalized = normalize('Jouy-en-Josas', City)
+      normalized.some().should.equal('JOUY EN JOSAS')
+
+      normalized = normalize('Paris      Cedex', City)
+      normalized.some().should.equal('PARIS')
+
+      normalized = normalize('CDX y', City)
+      normalized.some().should.equal('Y')
+
+      normalized = normalize('Paris Cedex  20', City)
+      normalized.some().should.equal('PARIS')
     })
   })
 
