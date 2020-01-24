@@ -2,7 +2,7 @@ import * as chai from 'chai'
 const should = chai.should()
 import 'mocha'
 
-import { normalize, uniformize, Email, FirstName, Mobile } from '../../../lib/src/typescript/index'
+import { normalize, uniformize, Email, FirstName, Mobile, PhoneNumber } from '../../../lib/src/typescript/index'
 
 describe('Normalize', () => {
   describe('uniformize', () => {
@@ -57,15 +57,39 @@ describe('Normalize', () => {
   })
 
   describe('Mobile', () => {
-    it('should normalize correctly', () => {
+    it('should normalize safely', () => {
       let normalized = normalize('0623456789', Mobile)
       normalized.some().should.equal('+33 (0) 623 456 789')
 
       normalized = normalize('07-23-45-67-89', Mobile)
       normalized.some().should.equal('+33 (0) 723 456 789')
+    })
+    it('should reject landline phone number', () => {
+      const normalized = normalize('01.23.45.67.89', Mobile)
+      should.equal(normalized.isNone(), true)
+    })
+  })
 
-      // Valid landline phone numbers aren't mobile phones
-      normalized = normalize('01.23.45.67.89', Mobile)
+  describe('PhoneNumber', () => {
+    it('should normalize safely', () => {
+      let normalized = normalize('0123456789', PhoneNumber)
+      normalized.some().should.equal('+33 (0) 123 456 789')
+
+      normalized = normalize('01-23-45-67-89', PhoneNumber)
+      normalized.some().should.equal('+33 (0) 123 456 789')
+
+      normalized = normalize('0033 0 1 23 45 67 89', PhoneNumber)
+      normalized.some().should.equal('+33 (0) 123 456 789')
+
+      // Mobile phones are phone numbers by definition
+      normalized = normalize('06.23.45.67.89', PhoneNumber)
+      normalized.some().should.equal('+33 (0) 623 456 789')
+    })
+    it('should reject invalid phone numbers', () => {
+      let normalized = normalize('01-23-45-67-8-10', PhoneNumber)
+      should.equal(normalized.isNone(), true)
+
+      normalized = normalize('not-even-close-to-a-phone-number', PhoneNumber)
       should.equal(normalized.isNone(), true)
     })
   })
