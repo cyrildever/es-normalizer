@@ -2,7 +2,11 @@ import * as chai from 'chai'
 chai.should()
 import 'mocha'
 
-import { normalize, uniformize, AddressLine, City, CodePostalFrance, Email, FirstName, Mobile, PhoneNumber, Title } from '../../../lib/src/typescript/index'
+import {
+  normalize, uniformize,
+  AddressLine, City, CodePostalFrance, DateOfBirth, Email, FirstName, Mobile, PhoneNumber, Title,
+  TIMESTAMP, TIMESTAMP_MILLIS, ISO_FORMAT, FRENCH_FORMAT
+} from '../../../lib/src/typescript/index'
 
 describe('Normalize', () => {
   describe('uniformize', () => {
@@ -73,6 +77,42 @@ describe('Normalize', () => {
     })
     it('should reject any invalid code postal', () => {
       const normalized = normalize('aghfkhgk', CodePostalFrance)
+      normalized.isNone().should.be.true
+    })
+  })
+
+  describe('DateOfBirth', () => {
+    it('should parse a date correctly', () => {
+      let normalized = normalize('1564/04/23', DateOfBirth, 'yyyy/MM/dd')
+      normalized.some().should.equal('23/04/1564')
+
+      normalized = normalize('95/04/23', DateOfBirth, 'yy/MM/dd')
+      normalized.some().should.equal('23/04/1995')
+
+      normalized = normalize('1472720661', DateOfBirth, TIMESTAMP)
+      normalized.some().should.equal('01/09/2016')
+
+      normalized = normalize('1472720661276', DateOfBirth, TIMESTAMP_MILLIS)
+      normalized.some().should.equal('01/09/2016')
+
+      normalized = normalize('10 MAY 1970', DateOfBirth, 'DD MMM YYYY', ISO_FORMAT)
+      normalized.some().should.equal('19700510')
+
+      // Hours, minutes and seconds are not supported in the format...
+      normalized = normalize('24/04/2010 12:00:00', DateOfBirth, 'dd/MM/yyyy hh:mm:ss')
+      normalized.isNone().should.be.true
+      // ... avoid passing them in the format string to make it work
+      normalized = normalize('24/04/2010 12:00:00', DateOfBirth, 'dd/MM/yyyy')
+      normalized.some().should.equal('24/04/2010')
+    })
+    it('should reject any invalid date', () => {
+      let normalized = normalize('1969', DateOfBirth, FRENCH_FORMAT)
+      normalized.isNone().should.be.true
+
+      normalized = normalize('not-a-date', DateOfBirth)
+      normalized.isNone().should.be.true
+
+      normalized = normalize('not-a-timestamp', DateOfBirth, TIMESTAMP)
       normalized.isNone().should.be.true
     })
   })
