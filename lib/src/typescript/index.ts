@@ -20,6 +20,19 @@ export const uniformize = (data: string): Maybe<string> => {
   return Some(uniformized)
 }
 
+/**
+ * Normalizer function to use as normalizer argument for any kind of data when no specific normalizer exists
+ * 
+ * @example
+ * import * as esNormalizer from 'es-normalizer'
+ * const maybeNormalized = esNormalizer.normalize('my data', esNormalizer.Any)
+ * 
+ * @param {string} data - The input to normalize
+ * @returns {Maybe<string} Some NFD-normalized and upper-cased string if any.
+ * */
+export const Any = (data: string): Maybe<string> =>
+  uniformize(data)
+
 export * from './AddressLine'
 export * from './City'
 export * from './CodePostalFrance'
