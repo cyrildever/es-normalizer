@@ -1,7 +1,3 @@
-import * as chai from 'chai'
-chai.should()
-import 'mocha'
-
 import {
   normalize, uniformize, Any,
   AddressLine, City, CodePostalFrance, DateOfBirth, Email, FirstName, Mobile, PhoneNumber, Title,
