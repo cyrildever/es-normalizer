@@ -16,12 +16,13 @@ npm i es-normalizer
 *IMPORTANT*: as of this version, most normalizers are for use on French data.
 
 To get a normalized string, you simply need to use the `normalize()` method passing it the data, a normalizer function and eventual arguments.
-There are currently nine specific normalizer functions and a generic one:
+There are currently ten specific normalizer functions and a generic one:
 * `Any`: the generic normalizer should be used if no specific normalizer exists;
 * `AddressLine`: pass any address line through it to get a normalized address, eg. `8, rue Henner` becomes `8 RUE HENNER`;
 * `City`: for normalizing city names (it removes any Cedex mention in French address, for instance);
 * `CodePostalFrance`: for French zip code;
 * `DateOfBirth`: pass a date and up to two parameters: the input format (eg. `YYYY-MM-DD`) and the output format wished (eg. `normalizer.ISO_FORMAT`), the default values being respectively the ISO format and the French date format;
+* `DepartementFrance`: extract the French departement number (out of a code postal, for instance);
 * `Email`: validates the passed e-mail and returns it in lower-case;
 * `FirstName`: pass a first name and get a normalized one (it uses an enlarged French dictionay of first names to process it making it possible to pass from `"J.-Louis"` to `"JEAN LOUIS"`);
 * `Mobile`: to validate a French mobile phone;
@@ -33,39 +34,43 @@ import * as esNormalizer from 'es-normalizer'
 
 const anyStringNormalized = esNormalizer.normalize('#This is any String(). ', esNormalizer.Any)
 // THIS IS ANY STRING
-console.log(anyStringNormalized.some())
+console.log(anyStringNormalized.getOrElse(''))
 
 const addressLine4Normalized = esNormalizer.normalize('24, rué de Maubeuge', esNormalizer.AddressLine)
 // 24 RUE MAUBEUGE
-console.log(addressLine4Normalized.some())
+console.log(addressLine4Normalized.getOrElse(''))
 
 const cityNormalized = esNormalizer.normalize('Paris Cedex 09', esNormalizer.City)
 // PARIS
-console.log(cityNormalized.some())
+console.log(cityNormalized.getOrElse(''))
 
 const ddnNormalized = esNormalizer.normalize('70/12/01', esNormalizer.DateOfBirth, 'YY/MM/DD', esNormalizer.FRENCH_FORMAT)
 // 01/12/1970
-console.log(ddnNormalized.some())
+console.log(ddnNormalized.getOrElse(''))
+
+const dptNormalized = esNormalizer.normalize(' 75009 ', esNormalizer.DepartementFrance)
+// 75
+console.log(dptNormalized.getOrElse(''))
 
 const emailNormalized = esNormalizer.normalize(' Contact@GMAIL.com', esNormalizer.Email)
 // contact@gmail.com
-console.log(emailNormalized.some())
+console.log(emailNormalized.getOrElse(''))
 
 const firstNameNormalized = esNormalizer.normalize('J.-Michel', esNormalizer.FirstName)
 // JEAN MICHEL
-console.log(firstNameNormalized.some())
+console.log(firstNameNormalized.getOrElse(''))
 
 const mobileNormalized = esNormalizer.normalize('06.23.45.67.89', esNormalizer.Mobile)
 // +33 (0) 123 456 789
-console.log(mobileNormalized.some())
+console.log(mobileNormalized.getOrElse(''))
 
 const phoneNormalized = esNormalizer.normalize('0123456789', esNormalizer.PhoneNumber)
 // +33 (0) 123 456 789
-console.log(phoneNormalized.some())
+console.log(phoneNormalized.getOrElse(''))
 
 const titleNormalized = esNormalizer.normalize('Mademoiselle', esNormalizer.Title)
 // 2
-console.log(titleNormalized.getOrElse(esNormalizer.uniformize('Mademoiselle')))
+console.log(titleNormalized.getOrElse(''))
 ```
 
 ##### Dependencies

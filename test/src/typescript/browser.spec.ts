@@ -1,6 +1,6 @@
 import {
   normalize, uniformize, Any,
-  AddressLine, City, CodePostalFrance, DateOfBirth, Email, FirstName, Mobile, PhoneNumber, Title,
+  AddressLine, City, CodePostalFrance, DateOfBirth, DepartementFrance, Email, FirstName, Mobile, PhoneNumber, Title,
   TIMESTAMP, TIMESTAMP_MILLIS, ISO_FORMAT, FRENCH_FORMAT
 } from '../../../lib/src/typescript/index'
 
@@ -117,6 +117,16 @@ describe('Normalize', () => {
 
       normalized = normalize('not-a-timestamp', DateOfBirth, TIMESTAMP)
       normalized.isNone().should.be.true
+    })
+  })
+
+  describe('DepartementFrance', () => {
+    it('should extract the appropriate departement number', () => {
+      let normalized = normalize('20167', DepartementFrance)
+      normalized.some().should.equal('2A')
+
+      normalized = normalize('  75009 ', DepartementFrance)
+      normalized.some().should.equal('75')
     })
   })
 
