@@ -8,7 +8,7 @@ export const PhoneNumber = (data: string): Maybe<string> => {
     return None<string>()
   }
   // TODO Become international
-  const re = RegExp(/^(((00)?(33)|0?(262)|0?(590)|0?(594)|0?(596))([^1-9]*)|0)?([^0-9]*)([\d]{3})([\d]{3})([\d]{3})$/)
+  const re = RegExp(/^(((00)?(33)|0?(262)|0?(590)|0?(594)|0?(596))([^1-9]*)|0)?([^0-9]*)([0-9]{3})([0-9]{3})([0-9]{3})$/)
   const matches = uniformized.some().replace(/\s/g, "").match(re)
   if (matches === null) {
     return None<string>()

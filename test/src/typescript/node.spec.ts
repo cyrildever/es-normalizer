@@ -4,7 +4,7 @@ import 'mocha'
 
 import {
   normalize, uniformize, Any,
-  AddressLine, City, CodePostalFrance, DateOfBirth, DepartementFrance, Email, FirstName, Mobile, PhoneNumber, Title,
+  AddressLine, City, CodePostalFrance, DateOfBirth, DepartementFrance, Email, FirstName, Mobile, PhoneNumber, StreetNumber, Title,
   TIMESTAMP, TIMESTAMP_MILLIS, ISO_FORMAT, FRENCH_FORMAT
 } from '../../../lib/src/typescript/index'
 
@@ -214,6 +214,22 @@ describe('Normalize', () => {
 
       normalized = normalize('not-even-close-to-a-phone-number', PhoneNumber)
       normalized.isNone().should.be.true
+    })
+  })
+
+  describe('StreetNumber', () => {
+    it('should normalize safely', () => {
+      let normalized = normalize('8bis', StreetNumber)
+      normalized.some().should.equal('8B')
+
+      normalized = normalize('11SEXIES', StreetNumber)
+      normalized.some().should.equal('11S')
+
+      normalized = normalize('221 bis', StreetNumber)
+      normalized.some().should.equal('221B')
+
+      normalized = normalize('1 bis C', StreetNumber)
+      normalized.some().should.equal('1B C')
     })
   })
 

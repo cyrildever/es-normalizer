@@ -16,7 +16,7 @@ npm i es-normalizer
 *IMPORTANT*: as of this version, most normalizers are for use on French data.
 
 To get a normalized string, you simply need to use the `normalize()` method passing it the data, a normalizer function and eventual arguments.
-There are currently ten specific normalizer functions and a generic one:
+There are currently eleven specific normalizer functions and a generic one:
 * `Any`: the generic normalizer should be used if no specific normalizer exists;
 * `AddressLine`: pass any address line through it to get a normalized address, eg. `8, rue Henner` becomes `8 RUE HENNER`;
 * `City`: for normalizing city names (it removes any Cedex mention in French address, for instance);
@@ -27,6 +27,7 @@ There are currently ten specific normalizer functions and a generic one:
 * `FirstName`: pass a first name and get a normalized one (it uses an enlarged French dictionay of first names to process it making it possible to pass from `"J.-Louis"` to `"JEAN LOUIS"`);
 * `Mobile`: to validate a French mobile phone;
 * `PhoneNumber`: to normalize a French phone or fax number in the international format, eg. `+33 (0) 123 456 789`;
+* `StreetNumber`: parses the passed field to normalize it the Empreinte Sociométrique&trade;'s way, eg. `1bis` or `1 bis` becomes `1B`;
 * `Title`: returns a code depending on the passed string (1 for gentlemen, 2 for ladies, 0 when undefined or unknown).
 
 ```typescript
@@ -67,6 +68,10 @@ console.log(mobileNormalized.getOrElse(''))
 const phoneNormalized = esNormalizer.normalize('0123456789', esNormalizer.PhoneNumber)
 // +33 (0) 123 456 789
 console.log(phoneNormalized.getOrElse(''))
+
+const streetNumberNormalized = esNormalizer.normalize('1bis', esNormalizer.StreetNumber)
+// 1B
+console.log(streetNumberNormalized.getOrElse(''))
 
 const titleNormalized = esNormalizer.normalize('Mademoiselle', esNormalizer.Title)
 // 2

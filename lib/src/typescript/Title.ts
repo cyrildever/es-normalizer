@@ -22,7 +22,7 @@ export const Title = (data: string): Maybe<string> =>
       case 'U':
         return Some(CODE_U)
       default: {
-        const re = RegExp(/\d+/g)
+        const re = RegExp(/[0-9]+/g)
         const found = dic.translateText(translated).match(re)
         if (found === undefined) {
           return None<string>()

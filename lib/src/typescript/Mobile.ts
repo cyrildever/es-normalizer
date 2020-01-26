@@ -7,7 +7,7 @@ export const Mobile = (data: string): Maybe<string> => {
   if (uniformized.isNone()) {
     return None<string>()
   }
-  const re = RegExp(/^(((00)?(33))|0)?([0]?)([\d])([\d]{2})([\d]{3})([\d]{3})$/)
+  const re = RegExp(/^(((00)?(33))|0)?([0]?)([0-9])([0-9]{2})([0-9]{3})([0-9]{3})$/)
   const matches = uniformized.some().replace(/\s/g, "").match(re)
   if (matches === null) {
     return None<string>()

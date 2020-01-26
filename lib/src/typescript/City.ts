@@ -9,4 +9,4 @@ const dic = Dictionary(set)
 
 export const City = (data: string): Maybe<string> =>
   uniformize(data).map(dic.translateText)
-    .flatMap(found => Some(found.replace(/CDX(\s+[\d]+)*/, '').replace(/\s+/g, ' ').trim()))
+    .flatMap(found => Some(found.replace(/CDX(\s+[0-9]+)*/, '').replace(/\s+/g, ' ').trim()))
