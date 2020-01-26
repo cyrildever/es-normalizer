@@ -1,7 +1,6 @@
 import { Maybe, None, Some } from 'monet'
 
 import { uniformize } from './index'
-
 import { Dictionary, titleDico, getSet } from './Dictionary'
 
 const set = getSet(titleDico)
