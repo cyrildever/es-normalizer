@@ -1,22 +1,18 @@
-import { Maybe, None, Some } from 'monet'
+import { Maybe, Some } from 'monet'
 
 import { uniformize } from './index'
 import { Dictionary, addressDico, getSet } from './Dictionary'
 
 const set = getSet(addressDico)
 const dic = Dictionary(set)
+const re = RegExp(`^([0-9]*)\s*(.*)$`)
 
-export const StreetNumber = (data: string): Maybe<string> => {
-  const re = RegExp(`^([0-9]*)\s*(.*)$`)
-  const matches = data.trim().match(re)
-  if (matches === null || matches.length < 2) {
-    return None<string>()
-  }
-  const num = matches[1]
-  let compUni = ''
-  if (matches[2] !== undefined) {
-    const comp = uniformize(matches[2])
-    compUni = dic.translateText(comp.getOrElse(''))
-  }
-  return Some(num + compUni)
-}
+export const StreetNumber = (data: string): Maybe<string> =>
+  Maybe.fromNull(data.trim().match(re))
+    .filter(matches => matches.length > 1)
+    .flatMap(matches => !!matches[2]
+      ? uniformize(matches[2])
+        .map(dic.translateText)
+        .map(compUni => matches[1] + compUni)
+      : Some(matches[1])
+    )

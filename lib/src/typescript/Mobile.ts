@@ -1,37 +1,17 @@
-import { Maybe, None, Some } from 'monet'
+import { Maybe } from 'monet'
 
 import { uniformize } from './index'
 
-export const Mobile = (data: string): Maybe<string> => {
-  const uniformized = uniformize(data)
-  if (uniformized.isNone()) {
-    return None<string>()
-  }
-  const re = RegExp(/^(((00)?(33))|0)?([0]?)([0-9])([0-9]{2})([0-9]{3})([0-9]{3})$/)
-  const matches = uniformized.some().replace(/\s/g, "").match(re)
-  if (matches === null) {
-    return None<string>()
-  }
-  // TODO Become international
-  if (matches[6] === undefined || (matches[6] != '6' && matches[6] != '7')) {
-    return None<string>()
-  }
-  let international = '+'
-  if (matches[4] === undefined) {
-    international += '33'
-  } else {
-    international += matches[4]
-  }
-  let prefix = '('
-  if (matches[5] === undefined || matches[5] === '') {
-    prefix += '0'
-  } else {
-    prefix += matches[5]
-  }
-  prefix += ')'
-  if (matches[7] === undefined || matches[8] === undefined || matches[9] === undefined) {
-    return None<string>()
-  }
-  const s = [international, prefix, matches[6] + matches[7], matches[8], matches[9]]
-  return Some(s.join(" "))
-}
+// TODO Become international
+const re = RegExp(/^(((00)?(33))|0)?([0]?)([0-9])([0-9]{2})([0-9]{3})([0-9]{3})$/)
+
+export const Mobile = (data: string): Maybe<string> =>
+  uniformize(data)
+    .flatMap(uniformized => Maybe.fromNull(uniformized.replace(/\s/g, "").match(re)))
+    .filter(matches => !!matches[7] && !!matches[8] && !!matches[9])
+    .filter(matches => !!matches[6] && matches[6] === '6' || matches[6] === '7')
+    .map(matches => {
+      const international = !!matches[4] ? `+${matches[4]}` : '+33'
+      const prefix = !!matches[5] ? `(${matches[5]})` : '(0)'
+      return [international, prefix, matches[6] + matches[7], matches[8], matches[9]].join(' ')
+    })
