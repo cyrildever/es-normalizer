@@ -1,11 +1,16 @@
 import moment from 'moment'
 import { Maybe, None, Some } from 'monet'
 
-export const FRENCH_FORMAT = 'DD/MM/YYYY'
-export const ISO_FORMAT = 'YYYYMMDD'
+export const FRENCH_DATE: Format = 'DD/MM/YYYY'
+export const ISO_DATE: Format = 'YYYYMMDD'
 
-export const TIMESTAMP = 'timestamp'
-export const TIMESTAMP_MILLIS = 'timestamp_millis'
+export const Timestamp = 'timestamp'
+type Timestamp = typeof Timestamp
+
+export const Milliseconds = 'timestamp_millis'
+type Milliseconds = typeof Milliseconds
+
+type Format = Timestamp | Milliseconds | string
 
 // TODO Enrich with other separators?
 const separators = RegExp(/[-:\/\s]+/g)
@@ -15,35 +20,28 @@ const separators = RegExp(/[-:\/\s]+/g)
  * 
  * @example
  * import * as esNormalizer from 'es-normalizer'
- * const normalized = esNormalizer.normalize('24/04/2010', esNormalizer.DateOfBirth, 'DD/MM/YYYY', esNormalizer.ISO_FORMAT)
+ * const normalized = esNormalizer.normalize('24/04/2010', esNormalizer.DateOfBirth('DD/MM/YYYY', esNormalizer.ISO))
  * // 20102404
- * console.log(normalized.some())
- * 
- * @param data - The input string
- * @param params - An list of arguments to use to format the output appropriately:
- * - the first item is the string format of the input string (defaut to ISO format: `YYYYMMDD`);
- * - the second item is the string format for the output (default to French date: `DD/MM/YYYY`).
- * 
- * The input format could be a `timestamp` or a `timestamp_millis`.
+ * console.log(normalized.getOrElse(''))
  */
-export const DateOfBirth = (input: string, ...params: ReadonlyArray<string>): Maybe<string> => {
-  const inputFormat = params.length > 0 ? params[0] : ISO_FORMAT
-  const outputFormat = params.length > 1 ? params[1] : FRENCH_FORMAT
+export const DateOfBirth = (input?: Format, output?: Format) => (data: string): Maybe<string> => {
+  const inputFormat = input === undefined || input === '' ? ISO_DATE : input
+  const outputFormat = output === undefined || output === '' ? FRENCH_DATE : output
   let d: moment.Moment
-  if (inputFormat.toLowerCase() === TIMESTAMP) {
-    d = moment.unix(parseInt(input))
-  } else if (inputFormat.toLowerCase() === TIMESTAMP_MILLIS) {
-    d = moment(parseInt(input))
+  if (inputFormat.toLowerCase() === Timestamp) {
+    d = moment.unix(parseInt(data))
+  } else if (inputFormat.toLowerCase() === Milliseconds) {
+    d = moment(parseInt(data))
   } else {
-    d = moment(input, inputFormat.replace(separators, '-').toUpperCase())
+    d = moment(data, inputFormat!.replace(separators, '-').toUpperCase())
   }
   if (!d.isValid()) {
     return None<string>()
   }
-  let output = d.format(outputFormat.replace(separators, '-').toUpperCase())
+  let out = d.format(outputFormat.replace(separators, '-').toUpperCase())
   const matches = outputFormat.match(separators)
   if (matches === null) {
-    return Some(output)
+    return Some(out)
   }
-  return Some(output.replace(/-/g, matches[0]))
+  return Some(out.replace(/-/g, matches[0]))
 }

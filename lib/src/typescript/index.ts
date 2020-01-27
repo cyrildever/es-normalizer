@@ -1,6 +1,6 @@
 import { Maybe, None, Some } from 'monet'
 
-export const normalize = (data: string, normalizer: (d: string, ...p: ReadonlyArray<string>) => Maybe<string>, ...params: ReadonlyArray<string>) => normalizer(data, ...params)
+export const normalize = (data: string, normalizer: (d: string) => Maybe<string>) => normalizer(data)
 
 export const uniformize = (data: string): Maybe<string> => {
   const normalized = data.trim().toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '')

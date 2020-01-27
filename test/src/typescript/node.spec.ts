@@ -5,7 +5,7 @@ import 'mocha'
 import {
   normalize, uniformize, Any,
   AddressLine, City, CodePostalFrance, DateOfBirth, DepartementFrance, Email, FirstName, Mobile, PhoneNumber, StreetNumber, Title,
-  TIMESTAMP, TIMESTAMP_MILLIS, ISO_FORMAT, FRENCH_FORMAT
+  ISO_DATE, FRENCH_DATE, Timestamp, Milliseconds
 } from '../../../lib/src/typescript/index'
 
 describe('Normalize', () => {
@@ -90,36 +90,36 @@ describe('Normalize', () => {
 
   describe('DateOfBirth', () => {
     it('should parse a date correctly', () => {
-      let normalized = normalize('1564/04/23', DateOfBirth, 'yyyy/MM/dd')
+      let normalized = normalize('1564/04/23', DateOfBirth('yyyy/MM/dd'))
       normalized.some().should.equal('23/04/1564')
 
-      normalized = normalize('95/04/23', DateOfBirth, 'yy/MM/dd')
+      normalized = normalize('95/04/23', DateOfBirth('yy/MM/dd'))
       normalized.some().should.equal('23/04/1995')
 
-      normalized = normalize('1472720661', DateOfBirth, TIMESTAMP)
+      normalized = normalize('1472720661', DateOfBirth(Timestamp))
       normalized.some().should.equal('01/09/2016')
 
-      normalized = normalize('1472720661276', DateOfBirth, TIMESTAMP_MILLIS)
+      normalized = normalize('1472720661276', DateOfBirth(Milliseconds))
       normalized.some().should.equal('01/09/2016')
 
-      normalized = normalize('10 MAY 1970', DateOfBirth, 'DD MMM YYYY', ISO_FORMAT)
+      normalized = normalize('10 MAY 1970', DateOfBirth('DD MMM YYYY', ISO_DATE))
       normalized.some().should.equal('19700510')
 
       // Hours, minutes and seconds are not supported...
-      normalized = normalize('24/04/2010 12:00:00', DateOfBirth, 'dd/MM/yyyy hh:mm:ss')
+      normalized = normalize('24/04/2010 12:00:00', DateOfBirth('dd/MM/yyyy hh:mm:ss'))
       normalized.isNone().should.be.true
       // ... avoid passing them in the format string to make it work
-      normalized = normalize('24/04/2010 12:00:00', DateOfBirth, 'dd/MM/yyyy')
+      normalized = normalize('24/04/2010 12:00:00', DateOfBirth('dd/MM/yyyy'))
       normalized.some().should.equal('24/04/2010')
     })
     it('should reject any invalid date', () => {
-      let normalized = normalize('1969', DateOfBirth, FRENCH_FORMAT)
+      let normalized = normalize('1969', DateOfBirth(FRENCH_DATE))
       normalized.isNone().should.be.true
 
-      normalized = normalize('not-a-date', DateOfBirth)
+      normalized = normalize('not-a-date', DateOfBirth())
       normalized.isNone().should.be.true
 
-      normalized = normalize('not-a-timestamp', DateOfBirth, TIMESTAMP)
+      normalized = normalize('not-a-timestamp', DateOfBirth(Timestamp))
       normalized.isNone().should.be.true
     })
   })
