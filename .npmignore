@@ -1,0 +1,7 @@
+tsconfig.json
+node_modules
+lib
+test
+*.tgz
+dist/lib/src/typescript/Dictionary/*.dico.d.ts
+dist/esNormalizer-*.js

@@ -1,0 +1,48 @@
+{
+  "name": "es-normalizer",
+  "version": "1.0.0",
+  "description": "Contact data normalization adapted from the Empreinte Sociométrique's normalizers",
+  "main": "dist/lib/src/typescript/index.js",
+  "types": "dist/lib/src/typescript/index.d.ts",
+  "scripts": {
+    "browserify": "browserify lib/src/typescript/index.ts --debug -p tsify -s esNormalizer -o dist/esNormalizer-${npm_package_version}.js",
+    "minify": "terser dist/esNormalizer-${npm_package_version}.js -c -m -o dist/esNormalizer-${npm_package_version}.min.js",
+    "build": "tsc",
+    "test": "mocha 'test/src/typescript/node.spec.ts' --require ts-node/register && tsc && browserify ./dist/test/src/typescript/browser.spec.js -o dist/test/src/typescript/index.js && live-server --port=9001 --mount=/:test/src/typescript"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/edgewhere/es-normalizer.git"
+  },
+  "keywords": [
+    "data",
+    "contact",
+    "normalization",
+    "empreinte sociometrique"
+  ],
+  "author": "Edgewhere @edgewhere",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/edgewhere/es-normalizer/issues"
+  },
+  "homepage": "https://github.com/edgewhere/es-normalizer#readme",
+  "peerDependencies": {
+    "moment": "^2.24.0",
+    "monet": "^0.9.1"
+  },
+  "devDependencies": {
+    "@types/chai": "^4.2.7",
+    "@types/mocha": "^5.2.7",
+    "@types/node": "^13.1.8",
+    "browserify": "^16.5.0",
+    "chai": "^4.2.0",
+    "live-server": "^1.2.1",
+    "mocha": "^6.2.2",
+    "moment": "^2.24.0",
+    "monet": "^0.9.1",
+    "terser": "^4.6.3",
+    "ts-node": "^8.6.2",
+    "tsify": "^4.0.1",
+    "typescript": "^3.7.5"
+  }
+}
