@@ -51,7 +51,7 @@ const cityNormalized = esNormalizer.normalize('Paris Cedex 09', esNormalizer.Cit
 // PARIS
 console.log(cityNormalized.getOrElse(''))
 
-const ddnNormalized = esNormalizer.normalize('70/12/01', esNormalizer.DateOfBirth, 'YY/MM/DD', esNormalizer.FRENCH_FORMAT)
+const ddnNormalized = esNormalizer.normalize('70/12/01', esNormalizer.DateOfBirth, 'YY/MM/DD', esNormalizer.FRENCH_DATE)
 // 01/12/1970
 console.log(ddnNormalized.getOrElse(''))
 
