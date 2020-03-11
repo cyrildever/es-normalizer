@@ -4,7 +4,7 @@
 ![npm](https://img.shields.io/npm/dw/es-normalizer)
 ![GitHub last commit](https://img.shields.io/github/last-commit/edgewhere/es-normalizer)
 ![GitHub issues](https://img.shields.io/github/issues/edgewhere/es-normalizer)
-![GitHub](https://img.shields.io/github/license/edgewhere/es-normalizer)
+![NPM](https://img.shields.io/npm/l/es-normalizer)
 
 This is a TypeScript normalization library for contact data (address, phones, etc.) adapted from [Edgewhere](https://www.edgewhere.fr)'s Empreinte Sociométrique normalizers. It's working in both the browser and a NodeJS environment.
 
