@@ -1,9 +1,9 @@
 # es-normalizer
 
-![GitHub tag (latest by date)](https://img.shields.io/github/v/tag/edgewhere/es-normalizer)
+![GitHub tag (latest by date)](https://img.shields.io/github/v/tag/cyrildever/es-normalizer)
 ![npm](https://img.shields.io/npm/dw/es-normalizer)
-![GitHub last commit](https://img.shields.io/github/last-commit/edgewhere/es-normalizer)
-![GitHub issues](https://img.shields.io/github/issues/edgewhere/es-normalizer)
+![GitHub last commit](https://img.shields.io/github/last-commit/cyrildever/es-normalizer)
+![GitHub issues](https://img.shields.io/github/issues/cyrildever/es-normalizer)
 ![NPM](https://img.shields.io/npm/l/es-normalizer)
 
 This is a TypeScript normalization library for contact data (address, phones, etc.) adapted from [Edgewhere](https://www.edgewhere.fr)'s Empreinte Sociométrique normalizers. It's working in both the browser and a NodeJS environment.
@@ -11,7 +11,7 @@ This is a TypeScript normalization library for contact data (address, phones, et
 ### Motivation
 
 When it comes to hashing data, the necessary uniqueness of the source sometimes makes it hard to compare two hashed data, mostly if dealing with postal address. This library helps normalizing any contact data (the postal or e-mail address, the mobile or landline phone number, the title, names or date of birth of an individual) that would feed any hashing algorithm to make hash comparison always trustable.
-It's based on the work for the Empreinte Sociométrique&trade; patented by Edgewhere. For more information on the latter, please [contact us](mailto:contact@edgewhere.fr).
+It's based on the work for the Empreinte Sociométrique&trade; patented by Cyril Dever for Edgewhere. For more information on the latter, please [contact us](mailto:contact@edgewhere.fr).
 
 ### Usage
 
@@ -98,4 +98,4 @@ See the [LICENSE](LICENSE) file.
 
 
 <hr />
-&copy; 2020 Edgewhere SAS. All rights reserved.
+&copy; 2020 Cyril Dever. All rights reserved.
