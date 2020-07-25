@@ -13,7 +13,7 @@ describe('Normalize', () => {
     it('should dismiss any weird character', () => {
       const data = ' cAfé#@~eT*%chocolAT )'
       const found = uniformize(data)
-      const expected = "CAFE ET CHOCOLAT"
+      const expected = 'CAFE ET CHOCOLAT'
       found.some().should.equal(expected)
     })
   })

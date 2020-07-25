@@ -1,4 +1,4 @@
-type DataSet = { [key: string]: string }
+interface DataSet { [key: string]: string }
 
 export interface Dictionary {
   readonly set: DataSet
@@ -9,7 +9,7 @@ export interface Dictionary {
 const translateText = (set: DataSet) => (input: string): string =>
   input.split(' ')
     .map(translateWord(set))
-    .filter(str => str !== "")
+    .filter(str => str !== '')
     .join(' ')
 
 const translateWord = (set: DataSet) => (input: string): string =>
@@ -21,7 +21,7 @@ export const Dictionary = (set: DataSet): Dictionary => ({
   translateWord: translateWord(set)
 })
 
-export const getSet = (data: string) =>
+export const getSet = (data: string): DataSet =>
   Object.fromEntries(data.split(/\n/g).map(line => line.split(/\t/g, 2)))
 
 export * from './address.dico'

@@ -22,12 +22,14 @@ export const Title = (data: string): Maybe<string> =>
         return Some(CODE_U)
       default: {
         const found = dic.translateText(translated).match(/[0-9]+/g)
-        if (found === undefined) {
+        if (found === undefined || found === null) {
           return None<string>()
-        } else if (found!.length == 1) {
-          return Some(found![0])
         } else {
-          return Some(CODE_U)
+          if (found.length == 1) {
+            return Some(found[0])
+          } else {
+            return Some(CODE_U)
+          }
         }
       }
     }

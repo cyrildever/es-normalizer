@@ -13,7 +13,7 @@ type Milliseconds = typeof Milliseconds
 type Format = Timestamp | Milliseconds | string
 
 // TODO Enrich with other separators?
-const separators = RegExp(/[-:\/\s]+/g)
+const separators = RegExp(/[-:/\s]+/g)
 
 /**
  * Normalize a date of birth (by default the French way, ie. using the `DD/MM/YYYY` format)
@@ -33,12 +33,12 @@ export const DateOfBirth = (input?: Format, output?: Format) => (data: string): 
   } else if (inputFormat.toLowerCase() === Milliseconds) {
     d = moment(parseInt(data))
   } else {
-    d = moment(data, inputFormat!.replace(separators, '-').toUpperCase())
+    d = moment(data, inputFormat.replace(separators, '-').toUpperCase())
   }
   if (!d.isValid()) {
     return None<string>()
   }
-  let out = d.format(outputFormat.replace(separators, '-').toUpperCase())
+  const out = d.format(outputFormat.replace(separators, '-').toUpperCase())
   const matches = outputFormat.match(separators)
   if (matches === null) {
     return Some(out)
