@@ -6,6 +6,8 @@ import { uniformize } from './index'
 const re = RegExp(/^(((00)?(33)|0?(262)|0?(590)|0?(594)|0?(596))([^1-9]*)|0)?([^0-9]*)([0-9]{3})([0-9]{3})([0-9]{3})$/)
 
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
+/* eslint-disable no-extra-boolean-cast */
+
 export const PhoneNumber = (data: string): Maybe<string> =>
   uniformize(data)
     .flatMap(uniformized => Maybe.fromNull(uniformized.replace(/\s/g, '').match(re))) // eslint-disable-line @typescript-eslint/prefer-regexp-exec
@@ -15,4 +17,6 @@ export const PhoneNumber = (data: string): Maybe<string> =>
       const prefix = !!matches[9] ? `(${matches[9]})` : '(0)'
       return [international, prefix, matches[11], matches[12], matches[13]].join(' ')
     })
+
+/* eslint-enable no-extra-boolean-cast */
 /* eslint-enable @typescript-eslint/strict-boolean-expressions */
