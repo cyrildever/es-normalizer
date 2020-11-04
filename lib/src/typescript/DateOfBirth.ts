@@ -20,7 +20,7 @@ const separators = RegExp(/[-:/\s]+/g)
  * 
  * @example
  * import * as esNormalizer from 'es-normalizer'
- * const normalized = esNormalizer.normalize('24/04/2010', esNormalizer.DateOfBirth('DD/MM/YYYY', esNormalizer.ISO))
+ * const normalized = esNormalizer.normalize('24/04/2010', esNormalizer.DateOfBirth('DD/MM/YYYY', esNormalizer.ISO_DATE))
  * // 20102404
  * console.log(normalized.getOrElse(''))
  */
