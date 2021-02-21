@@ -147,8 +147,10 @@ phone, a pseudo we use for a game, \dots) and, of course, our full civil status 
 Of course, we wouldn't want to share all these information to everyone. So, ensuring maximum security is obviously mandatory when 
 it comes to manipulating personal data.
 
-We describe a way to build such a safe footprint that we call \emph{Empreinte Sociométrique}\cite{empreinteSociometrique:cyd} that 
-is both totally secure, thanks to the use of strong pseudonymization techniques, and particularly effective.
+We describe a way to build such a safe footprint that we call \emph{Empreinte Sociométrique}\cite{empreinteSociometrique:cyd} and 
+that is both totally secure, thanks to the use of strong pseudonymization techniques, and particularly effective.
+
+Embedded in a QR Code, it could become an assistant to any identification device.
 
 %----------------------------------------------------------------------------------------
 
@@ -185,6 +187,62 @@ is both totally secure, thanks to the use of strong pseudonymization techniques,
         \end{equation}
     \end{small}
 \end{definition}
+
+\begin{definition}[Recombined Contact]
+    \label{recombinedContact}
+    A recombined contact is a final contact data potentially made out of different input data.
+
+    For example, you can create a recombined \texttt{address4} by concatenating a \texttt{streetName} with a \texttt{streetNumber}.
+\end{definition}
+
+Let $\nu: \omega \to \omega$ be a normalization function that takes an input data and returns its normalized counterpart.
+
+And let $\rho: \omega^n \to \omega$ be a recombination function that takes several input data to build a missing recombined contact.
+
+Finally, let $\mathfrak{h}()$ be the cryptographic hashing function\footnote{set as a system parameter}, $\mathfrak{c}(msg,key)$ an 
+encryption function and $\zeta()$ a compression algorithm.
+
+Algorithm \ref{algo:es} describes the general steps to take that leads from a set of input data to its \emph{Empreinte Sociométrique}.
+\begin{algorithm}
+    \SetKwProg{throw}{throw}{}{}
+    \KwIn{A vector $\textbf{d} := \{ d_1, d_2, \dots, d_n \}$ of input data, a key $K$}
+    \KwOut{The \emph{Empreinte Sociométrique} or an error}
+    \If{$\textbf{d} = \emptyset$}{
+        \throw{empty input data set}{}
+    }
+    initialize the set of normalized data $\mathcal{D} \gets \emptyset$; \\
+    \For{$i \gets 0$ \KwTo $n$ \KwBy $1$}{
+        \If{$d_i^\tau \not\in \mathcal{T}$}{
+            \Continue;
+        }
+        normalize input data: $d_{Norm} \gets \nu(d_i)$; \\
+        \If{$d_{Norm} \neq \emptyset$}{
+            $\mathcal{D} \gets d_{Norm}$; \\
+        }
+    }
+    create the set of recombined contacts $\mathcal{R}$ from the normalized data:$$
+        \mathcal{R} \gets \rho(\mathcal{D});
+    $$ \\
+    initialize the vector of ciphered contacts $\mathcal{C} \gets \emptyset$; \\
+    \For{$i \gets 0$ \KwTo $|\mathcal{R}|$ \KwBy $1$}{
+        $\mathcal{C} \gets \mathfrak{h}(\mathcal{R}_i)$; \\
+    }
+    initialize the sets of categorized contacts: $\mathcal{V}$ the variants, and $\overline{\mathcal{V}}$ the invariants; \\
+    \For{$i \gets 0$ \KwTo $|\mathcal{C}|$ \KwBy $1$}{
+        \eIf{$\mathcal{C}_i$ is invariant}{
+            $\overline{\mathcal{V}} \gets \mathcal{C}_i$; \\
+        }{
+            $\mathcal{V} \gets \mathcal{C}_i$; \\
+        }
+    }
+    build the corpus $c$ using $\mathcal{V}$ and $\overline{\mathcal{V}}$; \\
+    encrypt it and compress it to build the \emph{Empreinte Sociométrique}:$$
+        ES \gets \zeta \circ \mathfrak{c}(c, K);
+    $$ \\
+    \Return{$ES$};
+    \caption{Overall construction}
+    \label{algo:es}
+\end{algorithm}
 
 % \vfill\eject % To force break column if need be
 % \tableofcontents % Uncomment to add a table of contents
