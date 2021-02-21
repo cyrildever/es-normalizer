@@ -122,7 +122,10 @@
 \date{\DTMusedate{thedate}}
 \renewcommand{\maketitlehookd}{%
     \begin{abstract}
-        \noindent Lorem ipsum ... % // TODO 
+        \noindent We describe an algorithm that takes contact data to represent the social footprint of a person in a secure and universal way. It 
+        allows recognizing an identity without sharing or exposing any personal information to any potential eavesdropper. It could evolve with time 
+        and may carry the whole contact history of a person, making it possible to verify if he or she matches with even very old data, all without 
+        needing any kind of disclosure between parties. Last update: this technique is pending patent\footnotemark.
     \end{abstract}
 }
 
@@ -133,30 +136,38 @@
 % Print the title
 \maketitle
 
+{\renewcommand{\thefootnote}{\fnsymbol{footnote}} \footnotetext[1]{filed under registration number \texttt{FR1905778} at INPI on May 29, 2019}}
+
 %----------------------------------------------------------------------------------------
 %	ARTICLE CONTENTS
 %----------------------------------------------------------------------------------------
 
 \section{Introduction}
 
-\lettrine[nindent=0em,lines=3]{L}ike a tyre or a shoe leaving a distinctive mark on the ground, or a finger on a glass, each one of 
-us leaves a trace the more specific the richer our social interactions are. In particular, the history of our contact data is every 
-day more distinct to someone else's. Even before we move from our parents house, we start leaving personal trails (a first cell 
-phone, a pseudo we use for a game, \dots) and, of course, our full civil status (names, date of birth, etc.).
+\lettrine[nindent=0em,lines=3]{L}ike a tyre or a shoe leaving a distinctive mark on the ground, or a finger on a glass, each one of us leaves a trace 
+the more specific the richer our social interactions are. In particular, the history of our contact data is every day more distinct to someone else's. 
+Even before we move from our parents house, we start leaving personal trails (a first cell phone, a pseudo we use for a game, \dots) and, of course, our 
+full civil status (names, date of birth, etc.).
 
-Of course, we wouldn't want to share all these information to everyone. So, ensuring maximum security is obviously mandatory when 
-it comes to manipulating personal data.
+Of course, we wouldn't want to share all these information to everyone. So, ensuring maximum security is obviously mandatory when it comes to manipulating 
+personal data.
 
-We describe a way to build such a safe footprint that we call \emph{Empreinte Sociométrique}\cite{empreinteSociometrique:cyd} and 
-that is both totally secure, thanks to the use of strong pseudonymization techniques, and particularly effective.
+We herein describe a way to build such a safe footprint that we call \emph{Empreinte Sociométrique}\cite{empreinteSociometrique:cyd} and that is both 
+totally secure, thanks to the use of strong pseudonymization techniques, and particularly effective, that is it ensures that, even though two different 
+\emph{Empreintes Sociométriques} don't look quite alike, they might be representing the same person, but no external stakeholder may ever know.
 
-Embedded in a QR Code, it could become an assistant to any identification device.
+Embedded in a QR Code or used as is, it could become an assistant to any identification device or to further data manipulation, such as secure 
+deduplication and anonymous enrichment, or even blind comparison of customer databases, all in full compliance with the latest regulations (GDPR, CCPA, 
+\dots).
 
 %----------------------------------------------------------------------------------------
 
 \section{Formal Description}
 
 \subsection{General Algorithm}
+
+An \emph{Empreinte Sociométrique}\footnote{a literate translation being a \emph{Sociometric Imprint}} takes an input data characterized by its source and 
+its type and operates several operations to form the final elements: its corpus and its signature concatenated into one long string.
 
 \begin{definition}[Source Data]
     \label{sourceData}
@@ -169,7 +180,7 @@ Embedded in a QR Code, it could become an assistant to any identification device
     \label{dataType}
     We define the data type $\tau$ as a code defining which kind of source data we are dealing with, eg. \texttt{"firstname"}.
     
-    It is defined in a set of data types $\mathcal{T}$\footnote{see Table \ref{table:inputTypes} for available values in $\mathcal{T}$}.
+    It is defined in a set of data types $\mathcal{T}$ \footnote{see Table \ref{table:inputTypes} for available values in $\mathcal{T}$}.
 \end{definition}
 
 \begin{definition}[Input Data]
@@ -199,10 +210,9 @@ Let $\nu: \omega \to \omega$ be a normalization function that takes an input dat
 
 And let $\rho: \omega^n \to \omega$ be a recombination function that takes several input data to build a missing recombined contact.
 
-Finally, let $\mathfrak{h}()$ be the cryptographic hashing function\footnote{set as a system parameter}, $\mathfrak{c}(msg,key)$ an 
-encryption function and $\zeta()$ a compression algorithm.
+Finally, let $\mathfrak{h}()$ be a cryptographic hashing function\footnote{set as a system parameter}, $\mathfrak{c}(msg,key)$ an encryption function 
+and $\zeta()$ a compression algorithm.
 
-Algorithm \ref{algo:es} describes the general steps to take that leads from a set of input data to its \emph{Empreinte Sociométrique}.
 \begin{algorithm}
     \SetKwProg{throw}{throw}{}{}
     \KwIn{A vector $\textbf{d} := \{ d_1, d_2, \dots, d_n \}$ of input data, a key $K$}
@@ -220,9 +230,7 @@ Algorithm \ref{algo:es} describes the general steps to take that leads from a se
             $\mathcal{D} \gets d_{Norm}$; \\
         }
     }
-    create the set of recombined contacts $\mathcal{R}$ from the normalized data:$$
-        \mathcal{R} \gets \rho(\mathcal{D});
-    $$ \\
+    create the set of recombined contacts $\mathcal{R}$ from the normalized data: $\mathcal{R} \gets \rho(\mathcal{D})$; \\
     initialize the vector of ciphered contacts $\mathcal{C} \gets \emptyset$; \\
     \For{$i \gets 0$ \KwTo $|\mathcal{R}|$ \KwBy $1$}{
         $\mathcal{C} \gets \mathfrak{h}(\mathcal{R}_i)$; \\
@@ -244,8 +252,50 @@ Algorithm \ref{algo:es} describes the general steps to take that leads from a se
     \label{algo:es}
 \end{algorithm}
 
+Algorithm \ref{algo:es} describes the general steps to take that leads from a set of input data to its \emph{Empreinte Sociométrique}.
+
+In a nutshell, the whole process could be summed up as follows:
+\begin{itemize}
+    \item Data handling;
+    \item Normalization of contact data;
+    \item Recombination to maximize endpoints;
+    \item Ciphering of each endpoint;
+    \item Organization of the corpus;
+    \item Encryption;
+    \item Compression;
+    \item Signature and final packaging.
+\end{itemize}
+
+To ensure maximum security, the whole operation should take place on the data owner side.
+
+\subsection{Step-by-Step Process}
+
+\subsubsection{Normalization}
+
+Lorem ipsum ...
+
+\subsubsection{Recombination}
+
+Lorem ipsum ...
+
+\subsubsection{Ciphering}
+
+Lorem ipsum ...
+
+\subsubsection{Corpus}
+
+Lorem ipsum ...
+
+\subsubsection{Signature}
+
+Lorem ipsum ...
+
+\subsubsection{Output}
+
+Lorem ipsum ...
+
 % \vfill\eject % To force break column if need be
-% \tableofcontents % Uncomment to add a table of contents
+\tableofcontents % Uncomment to add a table of contents
 
 %----------------------------------------------------------------------------------------
 %	REFERENCE LIST
@@ -260,9 +310,10 @@ Cyril Dever. \emph{Système de traitement d'une base de données personnelle par
 
 %----------------------------------------------------------------------------------------
 
+\onecolumn
 \section*{Appendix}
 
-\begin{table*}
+\begin{table}[htb]
     \centering
     \caption{Input data types}
     \begin{tabular*}{0.75\textwidth}{l|l||l}
@@ -301,9 +352,9 @@ Cyril Dever. \emph{Système de traitement d'une base de données personnelle par
         \texttt{updated} & Unix timestamp of collect & \textit{1544529071}
         \label{table:inputTypes}
     \end{tabular*}
-\end{table*}
+\end{table}
 
-\begin{table*}
+\begin{table}[htb]
     \centering
     \caption{Address data type}
     \begin{tabular*}{\textwidth}{l|l||l}
@@ -338,24 +389,25 @@ Cyril Dever. \emph{Système de traitement d'une base de données personnelle par
         \texttt{updated} & Time of collect & \textit{1544529071}
         \label{table:address}
     \end{tabular*}
-\end{table*}
+\end{table}
 
-\begin{table*}
+\begin{table}[htb]
     \centering
     \caption{Alias data type}
     \begin{tabular*}{1.05\textwidth}{l|l||l}
         Field & Definition & \textit{Possible values (or examples)} \\
         \hline \hline
-        \texttt{type} & Alias type & $\texttt{"commonname"} \vee \texttt{"identity"} \vee \texttt{"np"} \vee \texttt{"pn"} \vee \texttt{"pseudo"} \vee \texttt{"tnp"} \vee \texttt{"tpn"}$ \\
+        \texttt{type} & Alias type & $\texttt{"commonname"} \vee \texttt{"identity"} \vee \texttt{"np"} \vee \texttt{"pn"} \vee \texttt{"pseudo"} 
+            \vee \texttt{"tnp"} \vee \texttt{"tpn"}$ \\
         \hline
         \texttt{value} & Alias value & \textit{John John} \\
         \hline
         \texttt{updated} & Time of collect & \textit{1544529071}
         \label{table:aliases}
     \end{tabular*}
-\end{table*}
+\end{table}
 
-\begin{table*}
+\begin{table}[htb]
     \centering
     \caption{E-mail data type}
     \begin{tabular*}{0.75\textwidth}{l|l||l}
@@ -372,15 +424,16 @@ Cyril Dever. \emph{Système de traitement d'une base de données personnelle par
         \texttt{updated} & Time of collect & \textit{1544529071}
         \label{table:emails}
     \end{tabular*}
-\end{table*}
+\end{table}
 
-\begin{table*}
+\begin{table}[htb]
     \centering
     \caption{ID data type}
     \begin{tabular*}{1.13\textwidth}{l|l||l}
         Field & Definition & \textit{Possible values (or examples)} \\
         \hline \hline
-        \texttt{type} & ID type & $\texttt{"id"} \vee \texttt{"cb"} \vee \texttt{"passport"} \vee \texttt{"registration"} \vee \texttt{"serial"} \vee \texttt{"ss"} \vee \texttt{"udid"}$ \\
+        \texttt{type} & ID type & $\texttt{"id"} \vee \texttt{"cb"} \vee \texttt{"passport"} \vee \texttt{"registration"} \vee \texttt{"serial"} \vee 
+            \texttt{"ss"} \vee \texttt{"udid"}$ \\
         \hline
         \texttt{value} & ID value & \textit{1234567890abcdef} \\
         \hline
@@ -391,9 +444,9 @@ Cyril Dever. \emph{Système de traitement d'une base de données personnelle par
         \texttt{updated} & Time of collect & \textit{1544529071}
         \label{table:ids}
     \end{tabular*}
-\end{table*}
+\end{table}
 
-\begin{table*}
+\begin{table}[htb]
     \centering
     \caption{Mobile phone data type}
     \begin{tabular*}{0.75\textwidth}{l|l||l}
@@ -412,9 +465,9 @@ Cyril Dever. \emph{Système de traitement d'une base de données personnelle par
         \texttt{updated} & Time of collect & \textit{1544529071}
         \label{table:mobiles}
     \end{tabular*}
-\end{table*}
+\end{table}
 
-\begin{table*}
+\begin{table}[htb]
     \centering
     \caption{Telephone data type}
     \begin{tabular*}{0.75\textwidth}{l|l||l}
@@ -433,9 +486,9 @@ Cyril Dever. \emph{Système de traitement d'une base de données personnelle par
         \texttt{updated} & Time of collect & \textit{1544529071}
         \label{table:phones}
     \end{tabular*}
-\end{table*}
+\end{table}
 
-\begin{table*}
+\begin{table}[htb]
     \centering
     \caption{Social media data type}
     \begin{tabular*}{0.9\textwidth}{l|l||l}
@@ -448,6 +501,6 @@ Cyril Dever. \emph{Système de traitement d'une base de données personnelle par
         \texttt{updated} & Time of collect & \textit{1544529071}
         \label{table:socials}
     \end{tabular*}
-\end{table*}
+\end{table}
 
 \end{document}
