@@ -139,7 +139,52 @@
 
 \section{Introduction}
 
-\lettrine[nindent=0em,lines=3]{L}orem ipsum ... % // TODO
+\lettrine[nindent=0em,lines=3]{L}ike a tyre or a shoe leaving a distinctive mark on the ground, or a finger on a glass, each one of 
+us leaves a trace the more specific the richer our social interactions are. In particular, the history of our contact data is every 
+day more distinct to someone else's. Even before we move from our parents house, we start leaving personal trails (a first cell 
+phone, a pseudo we use for a game, \dots) and, of course, our full civil status (names, date of birth, etc.).
+
+Of course, we wouldn't want to share all these information to everyone. So, ensuring maximum security is obviously mandatory when 
+it comes to manipulating personal data.
+
+We describe a way to build such a safe footprint that we call \emph{Empreinte Sociométrique}\cite{empreinteSociometrique:cyd} that 
+is both totally secure, thanks to the use of strong pseudonymization techniques, and particularly effective.
+
+%----------------------------------------------------------------------------------------
+
+\section{Formal Description}
+
+\subsection{General Algorithm}
+
+\begin{definition}[Source Data]
+    \label{sourceData}
+    A source data $\varsigma$ is the actual contact data we want to print in the \emph{Empreinte Sociométrique}, eg. \texttt{"Cyril"}.
+    
+    It is defined in the \emph{words} space: $\omega$.
+\end{definition}
+
+\begin{definition}[Data Type]
+    \label{dataType}
+    We define the data type $\tau$ as a code defining which kind of source data we are dealing with, eg. \texttt{"firstname"}.
+    
+    It is defined in a set of data types $\mathcal{T}$\footnote{see Table \ref{table:inputTypes} for available values in $\mathcal{T}$}.
+\end{definition}
+
+\begin{definition}[Input Data]
+    \label{inputData}
+    We define an input data $d_i$ as a tuple of data type and source data:
+    \begin{small}
+        \begin{equation}
+            \label{eq:inputData}
+                d_i := [d_i^\tau, d_i^\varsigma] \textrm{ with}\left\{
+                    \begin{array}{l}
+                        d_i^\tau \in \mathcal{T}, \textrm{the data type} \\ \\
+                        d_i^\varsigma \in \omega, \textrm{the source data} \\
+                    \end{array}
+                \right.
+        \end{equation}
+    \end{small}
+\end{definition}
 
 % \vfill\eject % To force break column if need be
 % \tableofcontents % Uncomment to add a table of contents
@@ -156,5 +201,195 @@ Cyril Dever. \emph{Système de traitement d'une base de données personnelle par
 \end{thebibliography}
 
 %----------------------------------------------------------------------------------------
+
+\section*{Appendix}
+
+\begin{table*}
+    \centering
+    \caption{Input data types}
+    \begin{tabular*}{0.75\textwidth}{l|l||l}
+        Code & Description & \textit{Examples} \\
+        \hline \hline
+        \texttt{gender} & Title or gender & \textit{M}, \textit{Mr.}, \textit{1}, \dots \\
+        \hline
+        \texttt{firstname} & First name or given name & \textit{John} \\
+        \hline
+        \texttt{middle} & Middle initials or other names & \textit{J.}, \textit{John} \\
+        \hline
+        \texttt{birthname} & Birth name & \textit{Kennedy} \\
+        \hline
+        \texttt{lastname} & Last name or married name & \textit{Kennedy} \\
+        \hline
+        \texttt{suffix} & Suffix & \textit{Jr.} \\
+        \hline
+        \texttt{birthdate} & Date of birth & \\
+        \hline
+        \texttt{birthplace} & Place of birth & \\
+        \hline
+        \texttt{addresses} & List of postal address & (see Table \ref{table:address}) \\
+        \hline
+        \texttt{aliases} & List of aliases & (see Table \ref{table:aliases}) \\
+        \hline
+        \texttt{emails} & List of e-mail addresses & (see Table \ref{table:emails}) \\
+        \hline
+        \texttt{ids} & List of official IDs & (see Table \ref{table:ids}) \\
+        \hline
+        \texttt{mobiles} & List of mobile phones & (see Table \ref{table:mobiles}) \\
+        \hline
+        \texttt{phones} & List of telephone numbers & (see Table \ref{table:phones}) \\
+        \hline
+        \texttt{socials} & List of social media & (see Table \ref{table:socials}) \\
+        \hline
+        \texttt{updated} & Unix timestamp of collect & \textit{1544529071}
+        \label{table:inputTypes}
+    \end{tabular*}
+\end{table*}
+
+\begin{table*}
+    \centering
+    \caption{Address data type}
+    \begin{tabular*}{\textwidth}{l|l||l}
+        Field & Definition & \textit{Possible values (or examples)} \\
+        \hline \hline
+        \texttt{type} & Address type & $\texttt{"birth"} \vee \texttt{"home"} \vee \texttt{"work"}$ \\
+        \hline
+        \texttt{address2} & Additional name & \textit{c/o Mme Dupont} \\
+        \hline
+        \texttt{address3} & Additional address & \textit{Apt. 123} \\
+        \hline
+        \texttt{address4} & Street number and name & \textit{1600 Pennsylvania Ave NW} \\
+        \hline
+        \texttt{address5} & PO Box or locality & \textit{BP 987} \\
+        \hline
+        \texttt{address6} & City and ZIP code & \textit{Washington, DC 20500} \\
+        \hline
+        \texttt{address7} & International destination & \textit{U.S.A.} \\
+        \hline
+        \texttt{city} & City & \textit{Washington} \\
+        \hline
+        \texttt{country} & Country & \textit{United States of America} \\
+        \hline
+        \texttt{fullAddress} & Full address & \textit{1600 Pennsylvania Ave NW, Washington, DC 20500} \\
+        \hline
+        \texttt{streetName} & Street name & \textit{Pennsylvania Ave NW} \\
+        \hline
+        \texttt{streetNumber} & Street number & \textit{1600} \\
+        \hline
+        \texttt{zip} & ZIP code & \textit{DC 20500} \\
+        \hline
+        \texttt{updated} & Time of collect & \textit{1544529071}
+        \label{table:address}
+    \end{tabular*}
+\end{table*}
+
+\begin{table*}
+    \centering
+    \caption{Alias data type}
+    \begin{tabular*}{1.05\textwidth}{l|l||l}
+        Field & Definition & \textit{Possible values (or examples)} \\
+        \hline \hline
+        \texttt{type} & Alias type & $\texttt{"commonname"} \vee \texttt{"identity"} \vee \texttt{"np"} \vee \texttt{"pn"} \vee \texttt{"pseudo"} \vee \texttt{"tnp"} \vee \texttt{"tpn"}$ \\
+        \hline
+        \texttt{value} & Alias value & \textit{John John} \\
+        \hline
+        \texttt{updated} & Time of collect & \textit{1544529071}
+        \label{table:aliases}
+    \end{tabular*}
+\end{table*}
+
+\begin{table*}
+    \centering
+    \caption{E-mail data type}
+    \begin{tabular*}{0.75\textwidth}{l|l||l}
+        Field & Definition & \textit{Possible values (or examples)} \\
+        \hline \hline
+        \texttt{type} & E-mail type & $\texttt{"business"} \vee \texttt{"personal"} \dots$ \\
+        \hline
+        \texttt{value} & E-mail address & \textit{john@john.com} \\
+        \hline
+        \texttt{isHash} & If is already hashed & $\texttt{true} \vee \texttt{false}$ \\
+        \hline
+        \texttt{engine} & Hashing algorithm & $\texttt{"blake2"} \vee \texttt{"md5"} \dots$ \\
+        \hline
+        \texttt{updated} & Time of collect & \textit{1544529071}
+        \label{table:emails}
+    \end{tabular*}
+\end{table*}
+
+\begin{table*}
+    \centering
+    \caption{ID data type}
+    \begin{tabular*}{1.13\textwidth}{l|l||l}
+        Field & Definition & \textit{Possible values (or examples)} \\
+        \hline \hline
+        \texttt{type} & ID type & $\texttt{"id"} \vee \texttt{"cb"} \vee \texttt{"passport"} \vee \texttt{"registration"} \vee \texttt{"serial"} \vee \texttt{"ss"} \vee \texttt{"udid"}$ \\
+        \hline
+        \texttt{value} & ID value & \textit{1234567890abcdef} \\
+        \hline
+        \texttt{isHash} & If is already hashed & $\texttt{true} \vee \texttt{false}$ \\
+        \hline
+        \texttt{engine} & Hashing algorithm & $\texttt{"blake2"} \vee \texttt{"md5"} \dots$ \\
+        \hline
+        \texttt{updated} & Time of collect & \textit{1544529071}
+        \label{table:ids}
+    \end{tabular*}
+\end{table*}
+
+\begin{table*}
+    \centering
+    \caption{Mobile phone data type}
+    \begin{tabular*}{0.75\textwidth}{l|l||l}
+        Field & Definition & \textit{Possible values (or examples)} \\
+        \hline \hline
+        \texttt{type} & Mobile phone type & $\texttt{"business"} \vee \texttt{"personal"} \dots$ \\
+        \hline
+        \texttt{value} & Mobile phone number & \textit{+33 (0) 623 456 789} \\
+        \hline
+        \texttt{isHash} & If is already hashed & $\texttt{true} \vee \texttt{false}$ \\
+        \hline
+        \texttt{engine} & Hashing algorithm & $\texttt{"blake2"} \vee \texttt{"md5"} \dots$ \\
+        \hline
+        \texttt{format} & Format & \texttt{"+dd (d) ddd ddd ddd"} \\
+        \hline
+        \texttt{updated} & Time of collect & \textit{1544529071}
+        \label{table:mobiles}
+    \end{tabular*}
+\end{table*}
+
+\begin{table*}
+    \centering
+    \caption{Telephone data type}
+    \begin{tabular*}{0.75\textwidth}{l|l||l}
+        Field & Definition & \textit{Possible values (or examples)} \\
+        \hline \hline
+        \texttt{type} & Telephone type & $\texttt{"business"} \vee \texttt{"personal"} \dots$ \\
+        \hline
+        \texttt{value} & Phone number & \textit{+33 (0) 123 456 789} \\
+        \hline
+        \texttt{isHash} & If is already hashed & $\texttt{true} \vee \texttt{false}$ \\
+        \hline
+        \texttt{engine} & Hashing algorithm & $\texttt{"blake2"} \vee \texttt{"md5"} \dots$ \\
+        \hline
+        \texttt{format} & Format & \texttt{"+dd (d) ddd ddd ddd"} \\
+        \hline
+        \texttt{updated} & Time of collect & \textit{1544529071}
+        \label{table:phones}
+    \end{tabular*}
+\end{table*}
+
+\begin{table*}
+    \centering
+    \caption{Social media data type}
+    \begin{tabular*}{0.9\textwidth}{l|l||l}
+        Field & Definition & \textit{Possible values (or examples)} \\
+        \hline \hline
+        \texttt{type} & Alias type & $\texttt{"facebook"} \vee \texttt{"linkedin"} \vee \texttt{"twitter"} \vee \texttt{"youtube"} \dots$ \\
+        \hline
+        \texttt{value} & Alias value & \textit{@john} \\
+        \hline
+        \texttt{updated} & Time of collect & \textit{1544529071}
+        \label{table:socials}
+    \end{tabular*}
+\end{table*}
 
 \end{document}
