@@ -318,27 +318,35 @@ The following are the transformations that might be applied to an input data sou
                 \texttt{;} \\
                 \texttt{:} \\
                 \texttt{*} \\
-                \dots \\
+                etc. \\
             \end{array}
         \right\} \mapsto \backslash\texttt{s}
     $$
-    \item Trim of extra empty spaces, eg.$$
+    \item Trim and extraction of excess spaces, eg.$$
         \backslash\texttt{s} \texttt{My} \backslash\texttt{s} \backslash\texttt{s} \texttt{data} 
             \mapsto \texttt{My} \backslash\texttt{s} \texttt{data} = \texttt{My data}
     $$
     \item Removal of accents, eg. \texttt{é} $\mapsto$ \texttt{e}, \texttt{ñ} $\mapsto$ \texttt{n};
     \item Capitalization, eg. \texttt{Cyril} $\mapsto$  \texttt{CYRIL};
-    \item Mapping with a dictionary, eg. $$
+    \item Dictionary substitution eg. $$
         \left.
             \begin{array}{r}
                 \texttt{AV} \\
                 \texttt{AVE} \\
                 \texttt{AVENUE} \\
                 \texttt{AVN} \\
-                \texttt{AVNU} \\
-                \dots
+                \texttt{AVNU}
             \end{array}
-        \right\} \mapsto \texttt{AV}
+        \right\} \mapsto \texttt{AV} ~~~ 
+        \left.
+            \begin{array}{r}
+                \texttt{2} \\
+                \texttt{F} \\
+                \texttt{Madam} \\
+                \texttt{Ms} \\
+                \texttt{Mrs}
+            \end{array}
+        \right\} \mapsto \texttt{2} ~~~ etc.
     $$
 \end{itemize}
 
@@ -347,23 +355,64 @@ In some case, normalization could transform the source data to a single space wh
 \begin{example}
     Let $$\left\{
         \begin{array}{l}
-            d_1^\varsigma \gets \texttt{1600, Pennsylvania Avenue NW.} \\ \\
-            d_2^\varsigma \gets \texttt{1600 PENNSYLVANIA AV NW} \\
+            d_1^\varsigma = \texttt{1600, Pennsylvania Avenue NW.} \\ \\
+            d_2^\varsigma = \texttt{1600 PENNSYLVANIA AV NW} \\
         \end{array}
     \right.$$
     be two source data of the same data type:$$
         d_1^\tau = d_2^\tau = \texttt{address4},
     $$
-    we have:$$
+    then we have:$$
         \nu(d_1^\varsigma) = \nu(d_2^\varsigma) = d_2^\varsigma \Longrightarrow d_1 \equiv d_2
     $$
-    
     As $d_1$ and $d_2$ are equivalent, only one of them would be kept in the set of normalized data $\mathcal{D}$ to pass onto the recombination step.
 \end{example}
 
 \subsubsection{Recombination}
 
-Lorem ipsum ... % // TODO
+Once the data will be irreversibly ciphered into the final \emph{Empreinte Sociométrique}, we need to maximize the chance to get a match when using it, the 
+goal of the recombination function $\rho$ is to provide as many representations as possible of the data.
+
+Each data type may have dozens or even hundreds of possible combinations so we won't detail them here.
+Instead, we will use an example.
+
+\begin{example}
+    Let the vector \textbf{d} be the input data:
+    \begin{small} $$\begin{array}{l}
+        \{ (\texttt{gender}, \texttt{Mr.}), (\texttt{firstname}, \texttt{John}), \\
+        (\texttt{middle}, \texttt{F.}), (\texttt{lastname}, \texttt{Kennedy}), \\
+        (\texttt{streetNumber}, \texttt{1600}), (\texttt{streetName}, \\
+        \texttt{Pennsylvania Avenue}), (\texttt{city}, \texttt{Washington}), \\
+        (\texttt{zip}, \texttt{DC 20500}) \}
+    \end{array}$$ \end{small}
+
+    Let $\mathcal{D} \gets \nu(\textbf{d})$  be a set of normalized data:
+    \begin{small} $$\begin{array}{l}
+        \{ \texttt{1}, \texttt{JOHN}, \texttt{F}, \texttt{KENNEDY}, \texttt{1600}, \\
+        \texttt{PENNSYLVANIA AV}, \texttt{WASHINGTON}, \texttt{DC 20500} \} \\
+    \end{array}$$ \end{small}
+
+    Then $\mathcal{R} \gets \rho(\mathcal{D})$ will yield the following additional values:
+    \begin{small} \begin{itemize}
+        \item $~~\texttt{1 JOHN}$;
+        \item $~~\texttt{JOHN F}$;
+        \item $~~\texttt{1 JOHN F}$;
+        \item $~~\texttt{JOHN KENNEDY}$;
+        \item $~~\texttt{1 JOHN KENNEDY}$;
+        \item $~~\texttt{JOHN F KENNEDY}$;
+        \item $~~\texttt{1 JOHN F KENNEDY}$;
+        \item $~~\texttt{1600 PENNSYLVANIA AV}$;
+        \item $~~\texttt{WASHINGTON DC 20500}$;
+        \item $\begin{array}{l} \texttt{1600 PENNSYLVANIA AV WASHINGTON} \\ \texttt{DC 20500}; \end{array}$
+        \item $\begin{array}{l} \texttt{JOHN KENNEDY} \texttt{1600 PENNSYLVANIA AV} \\\texttt{WASHINGTON DC 20500}; \end{array}$
+        \item $\begin{array}{l} \texttt{1 JOHN KENNEDY 1600 PENNSYLVANIA} \\ \texttt{AV WASHINGTON DC 20500}; \end{array}$
+        \item $\begin{array}{l} \texttt{JOHN F KENNEDY 1600 PENNSYLVANIA} \\ \texttt{AV WASHINGTON DC 20500}; \end{array}$
+        \item $\begin{array}{l} \texttt{1 JOHN F KENNEDY 1600 PENNSYLVANIA} \\ \texttt{AV WASHINGTON DC 20500}. \end{array}$
+    \end{itemize} \end{small}
+    $\Longrightarrow |\mathcal{R}| = 22$
+
+    Once ciphered, these 22 recombined contacts will form the basis of the corpus.
+\end{example}
 
 \subsubsection{Ciphering}
 
