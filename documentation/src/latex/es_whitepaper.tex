@@ -75,6 +75,7 @@
 \usepackage{amsthm}
 \theoremstyle{definition}
 \newtheorem{definition}{Definition}
+\newtheorem{example}{Example}
 
 \theoremstyle{remark}
 \newtheorem*{remark}{Note}
@@ -270,13 +271,99 @@ To ensure maximum security, the whole operation should take place on the data ow
 
 \subsection{Step-by-Step Process}
 
+As seen in Algorithm \ref{algo:es}, the very first step applied to an input data $d_i$ is to check whether it is a valid or not.
+
+At this stage, an input data would be deemed invalid for two reasons:
+\begin{itemize}
+    \item The source data is empty: $d_i^\varsigma = \emptyset$;
+    \item The data type doesn't exist: $d_i^\tau \not\in \mathcal{T}$.
+\end{itemize}
+
+Each invalid input data is discarded while each valid one is then applied the normalization function $\nu()$.
+
 \subsubsection{Normalization}
 
-Lorem ipsum ...
+The goal of such a normalization is to homogenize source data to make sure the subsequent operations handle equivalent data.
+
+\begin{definition}[Equivalence]
+    \label{equivalence}
+    We speak of data equivalence when we cannot distinguish them from one another after normalization:
+    \begin{equation}
+        \label{eq:equivalence}
+        \begin{array}{l}
+            \forall x, y \in \omega: x \equiv y \\ \\
+            \iff \left\{
+                \begin{array}{l}
+                    x^\tau = y^\tau \\ \\
+                    |\nu(x)| = |\nu(y)| \\ \\
+                    n \gets |\nu(x)|, \forall i := [1..n]: \\
+                        \quad \nu(x)[i] = \nu(y)[i] \\
+                \end{array}
+            \right. \\
+            \end{array}
+    \end{equation}
+
+    In other words, two input data are said equivalent if they share the same data type and their normalized versions are identical.
+\end{definition}
+
+Normalization could be applied differently depending on the data type $d^\tau$.
+
+The following are the transformations that might be applied to an input data source $d^\varsigma$:
+\begin{itemize}
+    \item Replacement of punctation and special characters by spaces, eg.$$
+        \left.
+            \begin{array}{r}
+                \texttt{-} \\
+                \texttt{.} \\
+                \texttt{;} \\
+                \texttt{:} \\
+                \texttt{*} \\
+                \dots \\
+            \end{array}
+        \right\} \mapsto \backslash\texttt{s}
+    $$
+    \item Trim of extra empty spaces, eg.$$
+        \backslash\texttt{s} \texttt{My} \backslash\texttt{s} \backslash\texttt{s} \texttt{data} 
+            \mapsto \texttt{My} \backslash\texttt{s} \texttt{data} = \texttt{My data}
+    $$
+    \item Removal of accents, eg. \texttt{é} $\mapsto$ \texttt{e}, \texttt{ñ} $\mapsto$ \texttt{n};
+    \item Capitalization, eg. \texttt{Cyril} $\mapsto$  \texttt{CYRIL};
+    \item Mapping with a dictionary, eg. $$
+        \left.
+            \begin{array}{r}
+                \texttt{AV} \\
+                \texttt{AVE} \\
+                \texttt{AVENUE} \\
+                \texttt{AVN} \\
+                \texttt{AVNU} \\
+                \dots
+            \end{array}
+        \right\} \mapsto \texttt{AV}
+    $$
+\end{itemize}
+
+In some case, normalization could transform the source data to a single space which in turn would lead to $d_i$ being discarded.
+
+\begin{example}
+    Let $$\left\{
+        \begin{array}{l}
+            d_1^\varsigma \gets \texttt{1600, Pennsylvania Avenue NW.} \\ \\
+            d_2^\varsigma \gets \texttt{1600 PENNSYLVANIA AV NW} \\
+        \end{array}
+    \right.$$
+    be two source data of the same data type:$$
+        d_1^\tau = d_2^\tau = \texttt{address4},
+    $$
+    we have:$$
+        \nu(d_1^\varsigma) = \nu(d_2^\varsigma) = d_2^\varsigma \Longrightarrow d_1 \equiv d_2
+    $$
+    
+    As $d_1$ and $d_2$ are equivalent, only one of them would be kept in the set of normalized data $\mathcal{D}$ to pass onto the recombination step.
+\end{example}
 
 \subsubsection{Recombination}
 
-Lorem ipsum ...
+Lorem ipsum ... % // TODO
 
 \subsubsection{Ciphering}
 
