@@ -62,11 +62,15 @@
 %	FUNCTIONS
 %----------------------------------------------------------------------------------------
 
+\usepackage{amsmath}
+
 \newcommand{\ceil}[1]{\left\lceil #1 \right\rceil}
+\newcommand{\concat}{\mathbin{{+}\mspace{-8mu}{+}}}
 \newcommand{\floor}[1]{\left\lfloor #1 \right\rfloor}
 \newcommand{\bsfnote}{\textsuperscript{*}} % for reference to the base64 string note
 \newcommand{\hexnote}{\textsuperscript{$\dagger$}} % for reference to the hex string note
-\newcommand{\mod}[1]{\ \mathrm{mod}\ #1}
+\newcommand{\modulo}[1]{\ \mathrm{mod}\ #1}
+\newcommand{\norm}[1]{\left\Vert#1\right\Vert}
 
 %----------------------------------------------------------------------------------------
 %	LISTINGS
@@ -233,11 +237,11 @@ and $\zeta()$ a compression algorithm.
     }
     create the set of recombined contacts $\mathcal{R}$ from the normalized data: $\mathcal{R} \gets \rho(\mathcal{D})$; \\
     initialize the vector of ciphered contacts $\mathcal{C} \gets \emptyset$; \\
-    \For{$i \gets 0$ \KwTo $|\mathcal{R}|$ \KwBy $1$}{
+    \For{$i \gets 0$ \KwTo $\norm{\mathcal{R}}$ \KwBy $1$}{
         $\mathcal{C} \gets \mathfrak{h}(\mathcal{R}_i)$; \\
     }
     initialize the sets of categorized contacts: $\mathcal{V}$ the variants, and $\overline{\mathcal{V}}$ the invariants; \\
-    \For{$i \gets 0$ \KwTo $|\mathcal{C}|$ \KwBy $1$}{
+    \For{$i \gets 0$ \KwTo $\norm{\mathcal{C}}$ \KwBy $1$}{
         \eIf{$\mathcal{C}_i$ is invariant}{
             $\overline{\mathcal{V}} \gets \mathcal{C}_i$; \\
         }{
@@ -295,8 +299,8 @@ The goal of such a normalization is to homogenize source data to make sure the s
             \iff \left\{
                 \begin{array}{l}
                     x^\tau = y^\tau \\ \\
-                    |\nu(x)| = |\nu(y)| \\ \\
-                    n \gets |\nu(x)|, \forall i := [1..n]: \\
+                    \norm{\nu(x)} = \norm{\nu(y)} \\ \\
+                    n \gets \norm{\nu(x)}, \forall i := [1..n]: \\
                         \quad \nu(x)[i] = \nu(y)[i] \\
                 \end{array}
             \right. \\
@@ -409,14 +413,14 @@ Instead, we will use an example.
         \item $\begin{array}{l} \texttt{JOHN F KENNEDY 1600 PENNSYLVANIA} \\ \texttt{AV WASHINGTON DC 20500}; \end{array}$
         \item $\begin{array}{l} \texttt{1 JOHN F KENNEDY 1600 PENNSYLVANIA} \\ \texttt{AV WASHINGTON DC 20500}. \end{array}$
     \end{itemize} \end{small}
-    $\Longrightarrow |\mathcal{R}| = 22$
+    $\Longrightarrow \norm{\mathcal{R}} = 22$
 
     Once ciphered, these 22 recombined contacts will form the basis of the corpus.
 \end{example}
 
 \subsubsection{Ciphering}
 
-Lorem ipsum ...
+Lorem ipsum ... % // TODO
 
 \subsubsection{Corpus}
 
