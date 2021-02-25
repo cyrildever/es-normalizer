@@ -417,7 +417,21 @@ Instead, we will use an example.
 
 \subsubsection{Ciphering}
 
-Lorem ipsum ... % // TODO
+As we want to take advantage of the very characteristics of cryptographic hashing, ie. making an input its unique yet irreversible fixed-length image, 
+and as we want it to be both secure and widely spread to devices, the cipher $\mathfrak{h}()$ to apply to each item of $\mathcal{R}$ should be a 
+well-known well-tested cryptographic hashing function:
+\begin{equation}
+    \label{eq:ciphering}
+    \forall i \in [1..\norm{\mathcal{R}}]: \mathcal{C}_i \gets \mathfrak{h}(\mathcal{R}_i)
+\end{equation}
+
+\begin{remark}
+    Because of the subsequent steps of our process, the strength of $\mathfrak{h}()$ is actually not that important, so it could be an algorithm as 
+    trivial as \texttt{MD-5} or a more secure one such as \texttt{Blake-2} or \texttt{Keccak}\footnote{Short list available on Wikipedia: 
+    \url{https://bit.ly/3bDpGxd}}.
+
+    The only thing mandatory is to set it once and for all to be sure any future utilization will use the same cipher.
+\end{remark}
 
 \subsubsection{Corpus}
 
