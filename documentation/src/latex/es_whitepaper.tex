@@ -319,8 +319,7 @@ The following are the transformations that might be applied to an input data sou
             \begin{array}{r}
                 \texttt{-} \\
                 \texttt{.} \\
-                \texttt{;} \\
-                \texttt{:} \\
+                \texttt{.} \\
                 \texttt{*} \\
                 etc. \\
             \end{array}
@@ -335,7 +334,6 @@ The following are the transformations that might be applied to an input data sou
     \item Dictionary substitution eg. $$
         \left.
             \begin{array}{r}
-                \texttt{AV} \\
                 \texttt{AVE} \\
                 \texttt{AVENUE} \\
                 \texttt{AVN} \\
@@ -344,7 +342,6 @@ The following are the transformations that might be applied to an input data sou
         \right\} \mapsto \texttt{AV} ~~~ 
         \left.
             \begin{array}{r}
-                \texttt{2} \\
                 \texttt{F} \\
                 \texttt{Madam} \\
                 \texttt{Ms} \\
@@ -396,7 +393,7 @@ Instead, we will use an example.
         \texttt{PENNSYLVANIA AV}, \texttt{WASHINGTON}, \texttt{DC 20500} \} \\
     \end{array}$$ \end{small}
 
-    Then $\mathcal{R} \gets \rho(\mathcal{D})$ will yield the following additional values:
+    Then $\mathcal{R} \gets \rho(\mathcal{D})$ might yield the following additional values:
     \begin{small} \begin{itemize}
         \item $~~\texttt{1 JOHN}$;
         \item $~~\texttt{JOHN F}$;
@@ -408,7 +405,7 @@ Instead, we will use an example.
         \item $~~\texttt{1600 PENNSYLVANIA AV}$;
         \item $~~\texttt{WASHINGTON DC 20500}$;
         \item $\begin{array}{l} \texttt{1600 PENNSYLVANIA AV WASHINGTON} \\ \texttt{DC 20500}; \end{array}$
-        \item $\begin{array}{l} \texttt{JOHN KENNEDY} \texttt{1600 PENNSYLVANIA AV} \\\texttt{WASHINGTON DC 20500}; \end{array}$
+        \item $\begin{array}{l} \texttt{JOHN KENNEDY 1600 PENNSYLVANIA AV} \\\texttt{WASHINGTON DC 20500}; \end{array}$
         \item $\begin{array}{l} \texttt{1 JOHN KENNEDY 1600 PENNSYLVANIA} \\ \texttt{AV WASHINGTON DC 20500}; \end{array}$
         \item $\begin{array}{l} \texttt{JOHN F KENNEDY 1600 PENNSYLVANIA} \\ \texttt{AV WASHINGTON DC 20500}; \end{array}$
         \item $\begin{array}{l} \texttt{1 JOHN F KENNEDY 1600 PENNSYLVANIA} \\ \texttt{AV WASHINGTON DC 20500}. \end{array}$
