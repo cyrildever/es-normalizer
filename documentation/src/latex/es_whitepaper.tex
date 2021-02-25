@@ -249,8 +249,8 @@ and $\zeta()$ a compression algorithm.
         }
     }
     build the corpus $c$ using $\mathcal{V}$ and $\overline{\mathcal{V}}$; \\
-    encrypt it and compress it to build the \emph{Empreinte Sociométrique}:$$
-        ES \gets \zeta \circ \mathfrak{c}(c, K);
+    compress it and encrypt it partly to build the \emph{Empreinte Sociométrique}:$$
+        ES \approx \zeta \circ \mathfrak{c}(c, K);
     $$ \\
     \Return{$ES$};
     \caption{Overall construction}
@@ -266,8 +266,8 @@ In a nutshell, the whole process could be summed up as follows:
     \item Recombination to maximize endpoints;
     \item Ciphering of each endpoint;
     \item Organization of the corpus;
-    \item Encryption;
     \item Compression;
+    \item Encryption;
     \item Signature and final packaging.
 \end{itemize}
 
@@ -371,8 +371,8 @@ In some case, normalization could transform the source data to a single space wh
 
 \subsubsection{Recombination}
 
-Once the data will be irreversibly ciphered into the final \emph{Empreinte Sociométrique}, we need to maximize the chance to get a match when using it, the 
-goal of the recombination function $\rho$ is to provide as many representations as possible of the data.
+Once the data will be irreversibly ciphered into the final \emph{Empreinte Sociométrique}, we need to maximize the chance to get a match when using it, 
+the goal of the recombination function $\rho$ is to provide as many representations as possible of the data.
 
 Each data type may have dozens or even hundreds of possible combinations so we won't detail them here.
 Instead, we will use an example.
@@ -412,8 +412,17 @@ Instead, we will use an example.
     \end{itemize} \end{small}
     $\Longrightarrow \norm{\mathcal{R}} = 22$
 
-    Once ciphered, these 22 recombined contacts will form the basis of the corpus.
+    Once ciphered, these 22 recombined contacts along with their respective output codes $\Omega$ will form the basis of the corpus.
 \end{example}
+
+\begin{definition}[Output Code]
+    \label{outputCode}
+    An output code $\Omega$ is a code defining the specific type of a recombined contact. It is either a special version of the input type code or the 
+    concatenation of its different parts.
+
+    A complete list of output types can be found in Table \ref{table:outputCodes}. Each code might be combined with one or several others in order to 
+    form a new output type.
+\end{definition}
 
 \subsubsection{Ciphering}
 
@@ -433,9 +442,120 @@ well-known well-tested cryptographic hashing function:
     The only thing mandatory is to set it once and for all to be sure any future utilization will use the same cipher.
 \end{remark}
 
+Once the ciphering stage finished, we have all the necessary components to build the first part of the \emph{Empreinte Sociométrique}: its corpus.
+
 \subsubsection{Corpus}
 
-Lorem ipsum ...
+To build the corpus, we first need to create the set of all imprints $\mathcal{E}$ from $\mathcal{C}$.
+
+\begin{definition}[Imprint]
+    \label{imprint}
+    We define an imprint\footnote{Empreinte in French} $\varepsilon$ by the following tuple of information:
+    \begin{itemize}
+        \item Its general type code, eg. $\varepsilon^\tau = \texttt{ad}$ for an address type;
+        \item The ciphered recombined normalized item $\varepsilon^c$;
+        \item A timestamp of collect (or insertion) in the system, eg. $\varepsilon^t = \texttt{1544529071}$;
+        \item Its specific short code $\varepsilon^{\overline{s}}$.
+    \end{itemize}
+
+    The complete list of type codes are given in Table \ref{table:empreintes}.
+
+    It is easy to prove that each imprint is as safe as the functions used to build $\varepsilon^c$.
+    And when we say "safe" it is by means of recovering the original data source (which doesn't exist anymore at this point).
+\end{definition}
+
+\begin{definition}[Short Code]
+    \label{shortCode}
+    A short code $\overline{s}$ is a special 4-characters hash defining the specific type of imprint.
+
+    Algorithm \ref{algo:shortCode} describes the construction of a short code using the output field type $\Omega$.
+    It uses a 62-characters basis $\mathcal{B}$ using the three following sequences in that order:
+    \begin{itemize}
+        \item The 10 figures: $1234567890$;
+        \item The 26 lower-case alphabet;
+        \item The 26 upper-case alphabet.
+    \end{itemize}
+
+    Let $idx(char)$ be a function that returns the index number (starting at $1$) of the passed character in $\mathcal{B}$.
+    \begin{algorithm}
+        \KwIn{$\Omega$}
+        \KwOut{The corresponding short code}
+        initialize the sum of $\Omega$ characters on that basis: $s \gets 0$; \\
+        \For{$i \gets 1$ \KwTo $\norm{\Omega}$}{
+            $s \gets s + idx(\Omega_i)$;
+        }
+        make it an hexadecimal string representation: $s_{16} := (s)_{16}$; \\
+        hash $\Omega$ with \texttt{MD-5} hashing function: $h := \texttt{md5}(\Omega)$; \\
+        extract and concatenate the first two characters of $s_{16}$ and $h$: $$
+            \overline{s} \gets s_{16}[0] \concat s_{16}[1] \concat h[0] \concat h[1]
+        $$ \\
+        \Return{$\overline{s}$};
+        \caption{Short code $\overline{s}$}
+        \label{algo:shortCode}
+    \end{algorithm}
+    
+    For example, for $\Omega = \texttt{email}$, we have: $\overline{s}(\Omega) := \texttt{0c5a}$
+\end{definition}
+
+\begin{definition}[Variance]
+    \label{variantInvariant}
+    A invariant contact data is a data that is not meant to change in a lifetime.
+    For example, the date of birth is invariant.
+    There is a limited set of variant contact data.
+
+    On the other hand, a variant data may change in time (for example, a postal address where one lives).
+    There is an unlimited list of invariant contact data. An \emph{Empreinte Sociométrique} may even carry multiple of the same types (for example, 
+    if one has moved a lot, he should have as many invariant addresses as places he is been living).
+\end{definition}
+
+\begin{definition}[Corpus]
+    \label{corpus}
+    The corpus of an \emph{Empreinte Sociométrique} is a special concatenation of all the imprints built from the input data using a secret token $T_k$.
+    It is made of variant and invariant imprints.
+
+    Algorithm \ref{algo:corpus} describes its construction.
+
+    Let \texttt{BLOCK\_SEP} and \texttt{SEC\_SEP} be two special string separators \footnote{In our current impmlementation, we use:
+        \begin{itemize}
+            \item The pipe character (\texttt{|}) as \texttt{BLOCK\_SEP};
+            \item The percent character (\texttt{\%}) as \texttt{SEC\_SEP}.
+        \end{itemize}
+    }, \texttt{PREFIX} a system parameter setting a cutting index, and $cut(str, at)$ the cutting string utility.
+
+    Finally, let \texttt{V\_HASH} be the hashing algorithm used.
+    \begin{algorithm}
+        \KwIn{The set of imprints $\mathcal{E}$, a secret token $T_k$}
+        \KwOut{The corpus string}
+        split the variant from the invariant imprints: $\mathcal{V}, \overline{\mathcal{V}} := \mathcal{E}$; \\
+        initialize the invariants string: $\overline{v} \gets 0$; \\
+        \For{$i \gets 1$ \KwTo $\norm{\overline{\mathcal{V}}}$ \KwBy $1$}{
+            $\overline{v} \gets \overline{v} + \overline{\mathcal{V}}_i$; \\
+            \If{$i < \norm{\overline{\mathcal{V}}}$}{
+                $\overline{v} \gets \overline{v} \concat \texttt{BLOCK\_SEP}$; \\
+            }
+        }
+        initialize the variants string: $v \gets 0$; \\
+        \For{$i \gets 1$ \KwTo $\norm{\mathcal{V}}$ \KwBy $1$}{
+            $v \gets v + \mathcal{V}_i$; \\
+            \If{$i < \norm{\mathcal{V}}$}{
+                $v \gets v \concat \texttt{BLOCK\_SEP}$; \\
+            }
+        }
+        concat the core corpus: $c \gets \overline{v} \concat \texttt{SEC\_SEP} \concat v$; \\
+        compress it: $C \gets \zeta(c)$; \\
+        separate prefix $p^-$ from suffix $s^+$ at \texttt{PREFIX}: $p^-, s^+ := cut(C, \texttt{PREFIX})$; \\
+        encrypt the prefix with the token: $\mathfrak{e} \gets \mathfrak{c}(p^-, T_k)$; \\
+        get the length of the encrypted prefix: $l \gets \norm{\mathfrak{e}}$; \\
+        set the version short code: $\upsilon \gets \overline{s}(\texttt{V\_HASH})$; \\
+        build the full corpus $\chi$:\begin{equation}
+            \chi \gets s^+ \concat \mathfrak{e} \concat \texttt{SEC\_SEP} \concat l \concat \upsilon
+        \end{equation} \\
+        hash the corpus with \texttt{MD-5} to get a 32-characters pseudo-random head string: $H \gets \texttt{md5}(\chi)$; \\
+        \Return{$H \concat \chi$};
+        \caption{Corpus construction}
+        \label{algo:corpus}
+    \end{algorithm}
+\end{definition}
 
 \subsubsection{Signature}
 
@@ -653,5 +773,146 @@ Cyril Dever. \emph{Système de traitement d'une base de données personnelle par
         \label{table:socials}
     \end{tabular*}
 \end{table}
+
+\begin{table}[htb]
+    \centering
+    \caption{List of base output codes}
+    \begin{tabular*}{0.6\textwidth}{l|l}
+        Code & Description \\
+        \hline \hline
+        \texttt{adresse2} & Postal address line 2 \\
+        \hline
+        \texttt{adresse3} & Postal address line 3 \\
+        \hline
+        \texttt{adresse4} & Postal address line 4 \\
+        \hline
+        \texttt{adresse5} & Postal address line 5 \\
+        \hline
+        \texttt{adresse} & Full postal address \\
+        \hline
+        \texttt{civ} & Title \\
+        \hline
+        \texttt{cp} & Postal (or ZIP) code \\
+        \hline
+        \texttt{ddn} & Date of birth \\
+        \hline
+        \texttt{dpt} & Department, eg.\texttt{75} \\
+        \hline
+        \texttt{dv} & Department and city, eg. \texttt{75 PARIS} \\
+        \hline
+        \texttt{email} & E-mail address \\
+        \hline
+        \texttt{facebook} & Facebook ID \\
+        \hline
+        \texttt{instagram} & Instagram ID \\
+        \hline
+        \texttt{linkedin} & LinkedIn ID \\
+        \hline
+        \texttt{pinterest} & Pinterest ID \\
+        \hline
+        \texttt{snapchat} & Snapchat ID \\
+        \hline
+        \texttt{twitter} & Twitter ID or screen name \\
+        \hline
+        \texttt{youtube} & Youtube ID \\
+        \hline
+        \texttt{in} & Initials and last name \\
+        \hline
+        \texttt{ini} & Initials \\
+        \hline
+        \texttt{middle\_ini} & Middle initial(s) \\
+        \hline
+        \texttt{mob} & Mobile phone number \\
+        \hline
+        \texttt{ni} & Last name and initials \\
+        \hline
+        \texttt{nom} & Last (or birth) name \\
+        \hline
+        \texttt{np} & Last and first names \\
+        \hline
+        \texttt{no} & Street number \\
+        \hline
+        \texttt{pays} & Country \\
+        \hline
+        \texttt{pn} & First and last names \\
+        \hline
+        \texttt{prenom} & First (or given) name \\
+        \hline
+        \texttt{middle} & Middle names \\
+        \hline
+        \texttt{raisonsociale} & Corporate name \\
+        \hline
+        \texttt{tel} & Telephone / landline number \\
+        \hline
+        \texttt{tin} & Title + Initials + Last name \\
+        \hline
+        \texttt{tn} & Title and last name \\
+        \hline
+        \texttt{tni} & Title + Last name + Initials \\
+        \hline
+        \texttt{tnp} & Title + Last name + First name \\
+        \hline
+        \texttt{tpn} & Title + First name + Last name \\
+        \hline
+        \texttt{ville} & City \\
+        \hline
+        \texttt{voie} & Street name
+        \label{table:outputCodes}
+    \end{tabular*}
+\end{table}
+
+\begin{table}[htb]
+    \centering
+    \caption{List of imprint type codes}
+    \begin{tabular*}{0.35\textwidth}{l|c}
+        Type & Code \\
+        \hline \hline
+        Address & \texttt{ad} \\
+        \hline
+        Alias & \texttt{al} \\
+        \hline
+        Birth date & \texttt{4d} \\
+        \hline
+        Birth name & \texttt{2n} \\
+        \hline
+        Birth place & \texttt{5p} \\
+        \hline
+        Country & \texttt{8c} \\
+        \hline
+        E-mail & \texttt{ml} \\
+        \hline
+        Facebook & \texttt{fb} \\
+        \hline
+        First name & \texttt{3n} \\
+        \hline
+        Gender & \texttt{1x} \\
+        \hline
+        Instagram & \texttt{ig} \\
+        \hline
+        LinkedIn & \texttt{li} \\
+        \hline
+        Marital name & \texttt{mn} \\
+        \hline
+        Middle names & \texttt{7m} \\
+        \hline
+        Mobile phone & \texttt{mb} \\
+        \hline
+        Pinterest & \texttt{pi} \\
+        \hline
+        Registration & \texttt{rg} \\
+        \hline
+        Snapchat & \texttt{sn} \\
+        \hline
+        Social security number & \texttt{6s} \\
+        \hline
+        Telephone number & \texttt{tl} \\
+        \hline
+        Twitter & \texttt{tw} \\
+        \hline
+        Youtube & \texttt{yt}
+        \label{table:empreintes}
+    \end{tabular*}
+\end{table}
+
 
 \end{document}
