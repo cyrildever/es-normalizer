@@ -453,14 +453,14 @@ To build the corpus, we first need to create the set of all imprints $\mathcal{E
     We define an imprint\footnote{Empreinte in French} $\varepsilon$ by the following tuple of information:
     \begin{itemize}
         \item Its general type code, eg. $\varepsilon^\tau = \texttt{ad}$ for an address type;
-        \item The ciphered recombined normalized item $\varepsilon^c$;
+        \item The ciphered recombined normalized item $\varepsilon^h$, called its \emph{hash};
         \item A timestamp of collect (or insertion) in the system, eg. $\varepsilon^t = \texttt{1544529071}$;
         \item Its specific short code $\varepsilon^{\overline{s}}$.
     \end{itemize}
 
     The complete list of type codes are given in Table \ref{table:empreintes}.
 
-    It is easy to prove that each imprint is as safe as the functions used to build $\varepsilon^c$.
+    It is easy to prove that each imprint is as safe as the functions used to build $\varepsilon^h$.
     And when we say "safe" it is by means of recovering the original data source (which doesn't exist anymore at this point).
 \end{definition}
 
@@ -522,7 +522,7 @@ To build the corpus, we first need to create the set of all imprints $\mathcal{E
         \end{itemize}
     }, \texttt{PREFIX} a system parameter setting a cutting index, and $cut(str, at)$ the cutting string utility.
 
-    Finally, let \texttt{V\_HASH} be the hashing algorithm used.
+    Finally, let \texttt{V\_HASH} be the hashing algorithm used by the system.
     \begin{algorithm}
         \KwIn{The set of imprints $\mathcal{E}$, a secret token $T_k$}
         \KwOut{The corpus string}
@@ -548,6 +548,7 @@ To build the corpus, we first need to create the set of all imprints $\mathcal{E
         get the length of the encrypted prefix: $l \gets \norm{\mathfrak{e}}$; \\
         set the version short code: $\upsilon \gets \overline{s}(\texttt{V\_HASH})$; \\
         build the full corpus $\chi$:\begin{equation}
+            \label{eq:corpus}
             \chi \gets s^+ \concat \mathfrak{e} \concat \texttt{SEC\_SEP} \concat l \concat \upsilon
         \end{equation} \\
         hash the corpus with \texttt{MD-5} to get a 32-characters pseudo-random head string: $H \gets \texttt{md5}(\chi)$; \\
@@ -559,14 +560,88 @@ To build the corpus, we first need to create the set of all imprints $\mathcal{E
 
 \subsubsection{Signature}
 
-Lorem ipsum ...
+Sometimes, you wouldn't want to take a chance to share the actual corpus, but rather an even safer version of it, which won't allow anyone (including 
+yourself) to rebuild the imprints. That is where the signature comes in handy.
+
+\begin{definition}[Registrar]
+    \label{registrar}
+    A registrar is a special invariant imprint. Built from their equivalent imprints, it includes the following items:
+    \begin{itemize}
+        \item Birth country (with code: \texttt{birthcountry});
+        \item Birth day (\texttt{birthday}) with default format \texttt{dd/MM/yyyy};
+        \item Birth place (\texttt{birthplace});
+        \item Given name (\texttt{givenname});
+        \item Full identity (\texttt{identity}) taking into account country of origin;
+        \item Middle names (\texttt{middlenames});
+        \item Surname (\texttt{surname}).
+    \end{itemize}
+\end{definition}
+
+\begin{definition}[Signature]
+    \label{signature}
+    The signature $\varSigma$ uses the corpus of the \emph{Empreinte Sociométrique} to build a unique yet irreversible identifier to freely share with 
+    no risk whatsoever to go back to the corpus, let alone the original data, from it.
+
+    Algorithm \ref{algo:signature} describes how to build it from the corpus.
+
+    Let $xt(corpus)$ be a function that transforms existing imprints in the corpus to registrars, $hash()$ the \texttt{Blake2b} hashing function 
+    returning its hexadecimal string representation, and $pub(shortCode, shortenedHash)$ the function building a public imprint where the 
+    $shortenedHash$ is the integer value of the imprint's \emph{hash} $\varepsilon^h$ with its first character stripped off\footnote{
+        For example, for a hash value of \texttt{ab12}, you strip off the heading \texttt{a} to get \texttt{b12} and recover the latter as its integer 
+        value \texttt{2834}: $shortenHash(\texttt{ab12}) = \texttt{2834}$
+    }.
+    \begin{algorithm}
+        \KwIn{A corpus $\chi$, the token $T_k$}
+        \KwOut{The signature}
+        extract the set of registrars from the corpus (if any); $\mathcal{R} \gets xt(\chi)$ \\
+        get existing gender $g$ and/or social security number $ss$: $\mathcal{R} \gets \{ g, ss \}$; \\
+        build the prefix $P$ by concatenating the registrars, the gender and the social security \emph{hashes};$$
+            P := \concat {\Big|}_{i=1}^{\norm{\mathcal{R}}} \varepsilon_i^h
+        $$ \\
+        set the hashed prefix: $H_P \gets hash(P)$; \\
+        encrypt the hashed prefix with the token: $E_P \gets \mathcal{c}(H_P, T_k)$; \\
+        finalize the prefix: $P \gets H_P[0] \concat E_P$; \\
+        initialize the empty string $s^\iota$; \\
+        \For{$i \gets 1$ \KwTo $\norm{\mathcal{R}}$ \KwBy $1$}{
+            build its public imprint $\varepsilon_i^\pi$:$$
+                \varepsilon_i^\pi \gets pub(\varepsilon^{\overline{s}}, shortenHash(\mathcal{R}_i))
+            $$ \\
+            $s^\iota \gets s^\iota \concat \varepsilon_i^\pi$; \\
+            \If{$i < norm{\mathcal{R}}$}{
+                $s^\iota \gets s^\iota \concat \texttt{SEC\_SEP}$; \\
+            }
+        }
+        keep the 8 first characters of the \texttt{MD-5} hash of $s^\iota$: $H_{s^\iota} \gets \texttt{md5}(s^\iota)[1..8]$; \\
+        encrypt $s^\iota$ with the token: $E_{s^\iota} \gets \mathfrak{c}(s^\iota, T_k)$; \\
+        finalize the signature $\varSigma$:\begin{equation}
+            \label{eq:signature}
+            \varSigma \gets P \concat \texttt{\%} \concat H_{s^\iota} \concat E_{s^\iota}
+        \end{equation} \\
+        \Return{$\varSigma$};
+        \caption{Signature construction}
+        \label{algo:signature}
+    \end{algorithm}
+
+    The $pub()$ function is where the alteration happens and therefore where lies the irreversibility of the signature and its public imprints.
+    But it can be proven that it is highly unlikely that this alteration, albeit coarse, might lead to false positive when matching signatures, all the 
+    more so if the imprints are numerous in the initial corpusÓ\footnote{and you shouldn't be using too small corpuses when relying on signatures}.
+\end{definition}
 
 \subsubsection{Output}
 
-Lorem ipsum ...
+As you might have noticed, there are two different output we can get from the \emph{Empreinte Sociométrique} algorithms:
+\begin{itemize}
+    \item The full corpus $\chi$ which allows for further processing (like computing its signature) or enhancement (by adding new data to it);
+    \item The signature $\varSigma$ which is an altered version of the corpus for safe public sharing.
+\end{itemize}
+
+Indeed, each person should build its own \emph{Empreinte Sociométrique} step-by-step with his own secret token. Then, he may rebuild specific ones 
+with others he wished to share contact information. For this last situation, he should probably only share the signature.
+That way, each person has his personal database of contact data secured, and can interact with others safely, both parties being able to ensure the 
+other's identity.
 
 % \vfill\eject % To force break column if need be
-\tableofcontents % Uncomment to add a table of contents
+% \tableofcontents % Uncomment to add a table of contents
 
 %----------------------------------------------------------------------------------------
 %	REFERENCE LIST
