@@ -1,0 +1,993 @@
+% EMPREINTE SOCIOMETRIQUE white paper
+
+%----------------------------------------------------------------------------------------
+%	PACKAGES AND OTHER DOCUMENT CONFIGURATIONS
+%----------------------------------------------------------------------------------------
+
+\documentclass[twoside,twocolumn]{article}
+
+\usepackage{blindtext} % Package to generate dummy text throughout this template 
+
+\usepackage[sc]{mathpazo} % Use the Palatino font
+\usepackage[T1]{fontenc} % Use 8-bit encoding that has 256 glyphs
+%\linespread{1.05} % Line spacing - Palatino needs more space between lines
+\usepackage{microtype} % Slightly tweak font spacing for aesthetics
+\usepackage{eufrak}
+\usepackage{graphicx} % For \scalebox
+
+\usepackage[english]{babel} % Language hyphenation and typographical rules
+
+\usepackage[hmarginratio=1:1,top=32mm,columnsep=20pt]{geometry} % Document margins
+\usepackage[hang, small,labelfont=bf,up,textfont=it,up]{caption} % Custom captions under/above floats in tables or figures
+\usepackage{booktabs} % Horizontal rules in tables
+
+\usepackage{lettrine} % The lettrine is the first enlarged letter at the beginning of the text
+
+\usepackage{enumitem} % Customized lists
+\setlist[itemize]{noitemsep} % Make itemize lists more compact
+
+\usepackage{abstract} % Allows abstract customization
+\renewcommand{\abstractnamefont}{\normalfont\bfseries} % Set the "Abstract" text to bold
+\renewcommand{\abstracttextfont}{\normalfont\small\itshape} % Set the abstract itself to small italic text
+
+\usepackage{titlesec} % Allows customization of titles
+\renewcommand\thesection{\Roman{section}} % Roman numerals for the sections
+\renewcommand\thesubsection{\arabic{subsection}} % roman numerals only for subsections
+\titleformat{\section}[block]{\Large\scshape\centering}{\thesection.}{1em}{} % Change the look of the section titles
+\titleformat{\subsection}[block]{\large\scshape}{\thesubsection.}{1em}{} % Change the look of the section titles
+
+\usepackage{fancyhdr} % Headers and footers
+\pagestyle{fancy} % All pages have headers and footers
+\fancyhead{} % Blank out the default header
+\fancyfoot{} % Blank out the default footer
+\fancyhead[C]{Empreinte Sociométrique $\bullet$ Cyril Dever} % Custom header text
+\fancyfoot[RO,LE]{\thepage} % Custom footer text
+\setlength{\headheight}{14pt}
+
+\usepackage{titling} % Customizing the title section
+
+\usepackage{hyperref} % For hyperlinks in the PDF
+
+\usepackage[symbol]{footmisc} % To use special character in footnote
+\renewcommand{\thefootnote}{\arabic{footnote}}
+
+\usepackage{outlines}
+\usepackage[font=itshape]{quoting}
+
+\usepackage[linesnumbered,ruled,vlined]{algorithm2e}
+\SetKw{Continue}{continue}
+\SetKw{KwBy}{by}
+
+%----------------------------------------------------------------------------------------
+%	FUNCTIONS
+%----------------------------------------------------------------------------------------
+
+\usepackage{amsmath}
+
+\newcommand{\ceil}[1]{\left\lceil #1 \right\rceil}
+\newcommand{\concat}{\mathbin{{+}\mspace{-8mu}{+}}}
+\newcommand{\floor}[1]{\left\lfloor #1 \right\rfloor}
+\newcommand{\bsfnote}{\textsuperscript{*}} % for reference to the base64 string note
+\newcommand{\hexnote}{\textsuperscript{$\dagger$}} % for reference to the hex string note
+\newcommand{\modulo}[1]{\ \mathrm{mod}\ #1}
+\newcommand{\norm}[1]{\left\Vert#1\right\Vert}
+
+%----------------------------------------------------------------------------------------
+%	LISTINGS
+%----------------------------------------------------------------------------------------
+
+\usepackage{amsthm}
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}
+\newtheorem{example}{Example}
+
+\theoremstyle{remark}
+\newtheorem*{remark}{Note}
+\newtheorem*{recall}{Recall}
+
+%----------------------------------------------------------------------------------------
+%	FIGURES
+%----------------------------------------------------------------------------------------
+
+\usepackage{tikz}
+\usepackage{caption}
+
+\usetikzlibrary{shapes.geometric, arrows, calc, positioning}
+
+\tikzstyle{startstop} = [rectangle, rounded corners, minimum width=3cm, minimum height=1cm,text centered, draw=black]
+\tikzstyle{io} = [trapezium, trapezium left angle=70, trapezium right angle=110, minimum width=3cm, minimum height=1cm, text centered, text width=1.7cm, inner sep=0.4cm, draw=black]
+\tikzstyle{process} = [rectangle, minimum width=3cm, minimum height=1cm, text centered, draw=black]
+\tikzstyle{decision} = [diamond, minimum width=3cm, minimum height=1cm, text centered, inner sep=-0.1cm, draw=black]
+\tikzstyle{arrow} = [thick,->,>=stealth]
+\tikzset{XOR/.style={draw,circle,append after command={
+        [shorten >=\pgflinewidth, shorten <=\pgflinewidth,]
+        (\tikzlastnode.north) edge (\tikzlastnode.south)
+        (\tikzlastnode.east) edge (\tikzlastnode.west)
+        }
+    }
+}
+
+%----------------------------------------------------------------------------------------
+%	TITLE SECTION
+%----------------------------------------------------------------------------------------
+
+\usepackage[english]{datetime2}
+\DTMsavedate{thedate}{2016-11-14}
+
+\setlength{\droptitle}{-5\baselineskip} % Move the title up
+
+\pretitle{\begin{center}\Large\bfseries}
+\posttitle{\end{center}}
+\title{Empreinte Sociométrique} % Title
+\author{%
+    \textsc{Cyril Dever}\\ % Name
+    \normalsize Edgewhere \\ % Institution
+}
+% \date{\today} % Leave empty to omit a date
+\date{\DTMusedate{thedate}}
+\renewcommand{\maketitlehookd}{%
+    \begin{abstract}
+        \noindent We describe an algorithm that takes contact data to represent the social footprint of a person in a secure and universal way. It 
+        allows recognizing an identity without sharing or exposing any personal information to any potential eavesdropper. It could evolve with time 
+        and may carry the whole contact history of a person, making it possible to verify if he or she matches with even very old data, all without 
+        needing any kind of disclosure between parties. Last update: this technique is pending patent\footnotemark.
+    \end{abstract}
+}
+
+%----------------------------------------------------------------------------------------
+
+\begin{document}
+
+% Print the title
+\maketitle
+
+{\renewcommand{\thefootnote}{\fnsymbol{footnote}} \footnotetext[1]{filed under registration number \texttt{FR1905778} at INPI on May 29, 2019}}
+
+%----------------------------------------------------------------------------------------
+%	ARTICLE CONTENTS
+%----------------------------------------------------------------------------------------
+
+\section{Introduction}
+
+\lettrine[nindent=0em,lines=3]{L}ike a tyre or a shoe leaving a distinctive mark on the ground, or a finger on a glass, each one of us leaves a trace 
+the more specific the richer our social interactions are. In particular, the history of our contact data is every day more distinct to someone else's. 
+Even before we move from our parents house, we start leaving personal trails (a first cell phone, a pseudo we use for a game, \dots) and, of course, our 
+full civil status (names, date of birth, etc.).
+
+Of course, we wouldn't want to share all these information to everyone. So, ensuring maximum security is obviously mandatory when it comes to manipulating 
+personal data.
+
+We herein describe a way to build such a safe footprint that we call \emph{Empreinte Sociométrique}\cite{empreinteSociometrique:cyd} and that is both 
+totally secure, thanks to the use of strong pseudonymization techniques, and particularly effective, that is it ensures that, even though two different 
+\emph{Empreintes Sociométriques} don't look quite alike, they might be representing the same person, but no external stakeholder may ever know.
+
+Embedded in a QR Code or used as is, it could become an assistant to any identification device or to further data manipulation, such as secure 
+deduplication and anonymous enrichment, or even blind comparison of customer databases, all in full compliance with the latest regulations (GDPR, CCPA, 
+\dots).
+
+%----------------------------------------------------------------------------------------
+
+\section{Formal Description}
+
+\subsection{General Algorithm}
+
+An \emph{Empreinte Sociométrique}\footnote{a literate translation being a \emph{Sociometric Imprint}} takes an input data characterized by its source and 
+its type and operates several operations to form the final elements: its corpus and its signature concatenated into one long string.
+
+\begin{definition}[Source Data]
+    \label{sourceData}
+    A source data $\varsigma$ is the actual contact data we want to print in the \emph{Empreinte Sociométrique}, eg. \texttt{"Cyril"}.
+    
+    It is defined in the \emph{words} space: $\omega$.
+\end{definition}
+
+\begin{definition}[Data Type]
+    \label{dataType}
+    We define the data type $\tau$ as a code defining which kind of source data we are dealing with, eg. \texttt{"firstname"}.
+    
+    It is defined in a set of data types $\mathcal{T}$ \footnote{see Table \ref{table:inputTypes} for available values in $\mathcal{T}$}.
+\end{definition}
+
+\begin{definition}[Input Data]
+    \label{inputData}
+    We define an input data $d_i$ as a tuple of data type and source data:
+    \begin{small}
+        \begin{equation}
+            \label{eq:inputData}
+                d_i := [d_i^\tau, d_i^\varsigma] \textrm{ with}\left\{
+                    \begin{array}{l}
+                        d_i^\tau \in \mathcal{T}, \textrm{the data type} \\ \\
+                        d_i^\varsigma \in \omega, \textrm{the source data} \\
+                    \end{array}
+                \right.
+        \end{equation}
+    \end{small}
+\end{definition}
+
+\begin{definition}[Recombined Contact]
+    \label{recombinedContact}
+    A recombined contact is a final contact data potentially made out of different input data.
+
+    For example, you can create a recombined \texttt{address4} by concatenating a \texttt{streetName} with a \texttt{streetNumber}.
+\end{definition}
+
+Let $\nu: \omega \to \omega$ be a normalization function that takes an input data and returns its normalized counterpart.
+
+And let $\rho: \omega^n \to \omega$ be a recombination function that takes several input data to build a missing recombined contact.
+
+Finally, let $\mathfrak{h}()$ be a cryptographic hashing function\footnote{set as a system parameter}, $\mathfrak{c}(msg,key)$ an encryption function 
+and $\zeta()$ a compression algorithm.
+
+\begin{algorithm}
+    \SetKwProg{throw}{throw}{}{}
+    \KwIn{A vector $\textbf{d} := \{ d_1, d_2, \dots, d_n \}$ of input data, a key $K$}
+    \KwOut{The \emph{Empreinte Sociométrique} or an error}
+    \If{$\textbf{d} = \emptyset$}{
+        \throw{empty input data set}{}
+    }
+    initialize the set of normalized data $\mathcal{D} \gets \emptyset$; \\
+    \For{$i \gets 0$ \KwTo $n$ \KwBy $1$}{
+        \If{$d_i^\tau \not\in \mathcal{T}$}{
+            \Continue;
+        }
+        normalize input data: $d_{Norm} \gets \nu(d_i)$; \\
+        \If{$d_{Norm} \neq \emptyset$}{
+            $\mathcal{D} \gets d_{Norm}$; \\
+        }
+    }
+    create the set of recombined contacts $\mathcal{R}$ from the normalized data: $\mathcal{R} \gets \rho(\mathcal{D})$; \\
+    initialize the vector of ciphered contacts $\mathcal{C} \gets \emptyset$; \\
+    \For{$i \gets 0$ \KwTo $\norm{\mathcal{R}}$ \KwBy $1$}{
+        $\mathcal{C} \gets \mathfrak{h}(\mathcal{R}_i)$; \\
+    }
+    initialize the sets of categorized contacts: $\mathcal{V}$ the variants, and $\overline{\mathcal{V}}$ the invariants; \\
+    \For{$i \gets 0$ \KwTo $\norm{\mathcal{C}}$ \KwBy $1$}{
+        \eIf{$\mathcal{C}_i$ is invariant}{
+            $\overline{\mathcal{V}} \gets \mathcal{C}_i$; \\
+        }{
+            $\mathcal{V} \gets \mathcal{C}_i$; \\
+        }
+    }
+    build the corpus $c$ using $\mathcal{V}$ and $\overline{\mathcal{V}}$; \\
+    compress it and encrypt it partly to build the \emph{Empreinte Sociométrique}:$$
+        ES \approx \zeta \circ \mathfrak{c}(c, K);
+    $$ \\
+    \Return{$ES$};
+    \caption{Overall construction}
+    \label{algo:es}
+\end{algorithm}
+
+Algorithm \ref{algo:es} describes the general steps to take that leads from a set of input data to its \emph{Empreinte Sociométrique}.
+
+In a nutshell, the whole process could be summed up as follows:
+\begin{itemize}
+    \item Data handling;
+    \item Normalization of contact data;
+    \item Recombination to maximize endpoints;
+    \item Ciphering of each endpoint;
+    \item Organization of the corpus;
+    \item Compression;
+    \item Encryption;
+    \item Signature and final packaging.
+\end{itemize}
+
+To ensure maximum security, the whole operation should take place on the data owner side.
+
+\subsection{Step-by-Step Process}
+
+As seen in Algorithm \ref{algo:es}, the very first step applied to an input data $d_i$ is to check whether it is a valid or not.
+
+At this stage, an input data would be deemed invalid for two reasons:
+\begin{itemize}
+    \item The source data is empty: $d_i^\varsigma = \emptyset$;
+    \item The data type doesn't exist: $d_i^\tau \not\in \mathcal{T}$.
+\end{itemize}
+
+Each invalid input data is discarded while each valid one is then applied the normalization function $\nu()$.
+
+\subsubsection{Normalization}
+
+The goal of such a normalization is to homogenize source data to make sure the subsequent operations handle equivalent data.
+
+\begin{definition}[Equivalence]
+    \label{equivalence}
+    We speak of data equivalence when we cannot distinguish them from one another after normalization:
+    \begin{equation}
+        \label{eq:equivalence}
+        \begin{array}{l}
+            \forall x, y \in \omega: x \equiv y \\ \\
+            \iff \left\{
+                \begin{array}{l}
+                    x^\tau = y^\tau \\ \\
+                    \norm{\nu(x)} = \norm{\nu(y)} \\ \\
+                    n \gets \norm{\nu(x)}, \forall i := [1..n]: \\
+                        \quad \nu(x)[i] = \nu(y)[i] \\
+                \end{array}
+            \right. \\
+            \end{array}
+    \end{equation}
+
+    In other words, two input data are said equivalent if they share the same data type and their normalized versions are identical.
+\end{definition}
+
+Normalization could be applied differently depending on the data type $d^\tau$.
+
+The following are the transformations that might be applied to an input data source $d^\varsigma$:
+\begin{itemize}
+    \item Replacement of punctation and special characters by spaces, eg.$$
+        \left.
+            \begin{array}{r}
+                \texttt{-} \\
+                \texttt{.} \\
+                \texttt{.} \\
+                \texttt{*} \\
+                etc. \\
+            \end{array}
+        \right\} \mapsto \backslash\texttt{s}
+    $$
+    \item Trim and extraction of excess spaces, eg.$$
+        \backslash\texttt{s} \texttt{My} \backslash\texttt{s} \backslash\texttt{s} \texttt{data} 
+            \mapsto \texttt{My} \backslash\texttt{s} \texttt{data} = \texttt{My data}
+    $$
+    \item Removal of accents, eg. \texttt{é} $\mapsto$ \texttt{e}, \texttt{ñ} $\mapsto$ \texttt{n};
+    \item Capitalization, eg. \texttt{Cyril} $\mapsto$  \texttt{CYRIL};
+    \item Dictionary substitution eg. $$
+        \left.
+            \begin{array}{r}
+                \texttt{AVE} \\
+                \texttt{AVENUE} \\
+                \texttt{AVN} \\
+                \texttt{AVNU}
+            \end{array}
+        \right\} \mapsto \texttt{AV} ~~~ 
+        \left.
+            \begin{array}{r}
+                \texttt{F} \\
+                \texttt{Madam} \\
+                \texttt{Ms} \\
+                \texttt{Mrs}
+            \end{array}
+        \right\} \mapsto \texttt{2} ~~~ etc.
+    $$
+\end{itemize}
+
+In some case, normalization could transform the source data to a single space which in turn would lead to $d_i$ being discarded.
+
+\begin{example}
+    Let $$\left\{
+        \begin{array}{l}
+            d_1^\varsigma = \texttt{1600, Pennsylvania Avenue NW.} \\ \\
+            d_2^\varsigma = \texttt{1600 PENNSYLVANIA AV NW} \\
+        \end{array}
+    \right.$$
+    be two source data of the same data type:$$
+        d_1^\tau = d_2^\tau = \texttt{address4},
+    $$
+    then we have:$$
+        \nu(d_1^\varsigma) = \nu(d_2^\varsigma) = d_2^\varsigma \Longrightarrow d_1 \equiv d_2
+    $$
+    As $d_1$ and $d_2$ are equivalent, only one of them would be kept in the set of normalized data $\mathcal{D}$ to pass onto the recombination step.
+\end{example}
+
+\subsubsection{Recombination}
+
+Once the data will be irreversibly ciphered into the final \emph{Empreinte Sociométrique}, we need to maximize the chance to get a match when using it, 
+the goal of the recombination function $\rho$ is to provide as many representations as possible of the data.
+
+Each data type may have dozens or even hundreds of possible combinations so we won't detail them here.
+Instead, we will use an example.
+
+\begin{example}
+    Let the vector \textbf{d} be the input data:
+    \begin{small} $$\begin{array}{l}
+        \{ (\texttt{gender}, \texttt{Mr.}), (\texttt{firstname}, \texttt{John}), \\
+        (\texttt{middle}, \texttt{F.}), (\texttt{lastname}, \texttt{Kennedy}), \\
+        (\texttt{streetNumber}, \texttt{1600}), (\texttt{streetName}, \\
+        \texttt{Pennsylvania Avenue}), (\texttt{city}, \texttt{Washington}), \\
+        (\texttt{zip}, \texttt{DC 20500}) \}
+    \end{array}$$ \end{small}
+
+    Let $\mathcal{D} \gets \nu(\textbf{d})$  be a set of normalized data:
+    \begin{small} $$\begin{array}{l}
+        \{ \texttt{1}, \texttt{JOHN}, \texttt{F}, \texttt{KENNEDY}, \texttt{1600}, \\
+        \texttt{PENNSYLVANIA AV}, \texttt{WASHINGTON}, \texttt{DC 20500} \} \\
+    \end{array}$$ \end{small}
+
+    Then $\mathcal{R} \gets \rho(\mathcal{D})$ might yield the following additional values:
+    \begin{small} \begin{itemize}
+        \item $~~\texttt{1 JOHN}$;
+        \item $~~\texttt{JOHN F}$;
+        \item $~~\texttt{1 JOHN F}$;
+        \item $~~\texttt{JOHN KENNEDY}$;
+        \item $~~\texttt{1 JOHN KENNEDY}$;
+        \item $~~\texttt{JOHN F KENNEDY}$;
+        \item $~~\texttt{1 JOHN F KENNEDY}$;
+        \item $~~\texttt{1600 PENNSYLVANIA AV}$;
+        \item $~~\texttt{WASHINGTON DC 20500}$;
+        \item $\begin{array}{l} \texttt{1600 PENNSYLVANIA AV WASHINGTON} \\ \texttt{DC 20500}; \end{array}$
+        \item $\begin{array}{l} \texttt{JOHN KENNEDY 1600 PENNSYLVANIA AV} \\\texttt{WASHINGTON DC 20500}; \end{array}$
+        \item $\begin{array}{l} \texttt{1 JOHN KENNEDY 1600 PENNSYLVANIA} \\ \texttt{AV WASHINGTON DC 20500}; \end{array}$
+        \item $\begin{array}{l} \texttt{JOHN F KENNEDY 1600 PENNSYLVANIA} \\ \texttt{AV WASHINGTON DC 20500}; \end{array}$
+        \item $\begin{array}{l} \texttt{1 JOHN F KENNEDY 1600 PENNSYLVANIA} \\ \texttt{AV WASHINGTON DC 20500}. \end{array}$
+    \end{itemize} \end{small}
+    $\Longrightarrow \norm{\mathcal{R}} = 22$
+
+    Once ciphered, these 22 recombined contacts along with their respective output codes $\Omega$ will form the basis of the corpus.
+\end{example}
+
+\begin{definition}[Output Code]
+    \label{outputCode}
+    An output code $\Omega$ is a code defining the specific type of a recombined contact. It is either a special version of the input type code or the 
+    concatenation of its different parts.
+
+    A complete list of output types can be found in Table \ref{table:outputCodes}. Each code might be combined with one or several others in order to 
+    form a new output type.
+\end{definition}
+
+\subsubsection{Ciphering}
+
+As we want to take advantage of the very characteristics of cryptographic hashing, ie. making an input its unique yet irreversible fixed-length image, 
+and as we want it to be both secure and widely spread to devices, the cipher $\mathfrak{h}()$ to apply to each item of $\mathcal{R}$ should be a 
+well-known well-tested cryptographic hashing function:
+\begin{equation}
+    \label{eq:ciphering}
+    \forall i \in [1..\norm{\mathcal{R}}]: \mathcal{C}_i \gets \mathfrak{h}(\mathcal{R}_i)
+\end{equation}
+
+\begin{remark}
+    Because of the subsequent steps of our process, the strength of $\mathfrak{h}()$ is actually not that important, so it could be an algorithm as 
+    trivial as \texttt{MD-5} or a more secure one such as \texttt{Blake-2} or \texttt{Keccak}\footnote{Short list available on Wikipedia: 
+    \url{https://bit.ly/3bDpGxd}}.
+
+    The only thing mandatory is to set it once and for all to be sure any future utilization will use the same cipher.
+\end{remark}
+
+Once the ciphering stage finished, we have all the necessary components to build the first part of the \emph{Empreinte Sociométrique}: its corpus.
+
+\subsubsection{Corpus}
+
+To build the corpus, we first need to create the set of all imprints $\mathcal{E}$ from $\mathcal{C}$.
+
+\begin{definition}[Imprint]
+    \label{imprint}
+    We define an imprint\footnote{Empreinte in French} $\varepsilon$ by the following tuple of information:
+    \begin{itemize}
+        \item Its general type code, eg. $\varepsilon^\tau = \texttt{ad}$ for an address type;
+        \item The ciphered recombined normalized item $\varepsilon^h$, called its \emph{hash};
+        \item A timestamp of collect (or insertion) in the system, eg. $\varepsilon^t = \texttt{1544529071}$;
+        \item Its specific short code $\varepsilon^{\overline{s}}$.
+    \end{itemize}
+
+    The complete list of type codes are given in Table \ref{table:empreintes}.
+
+    It is easy to prove that each imprint is as safe as the functions used to build $\varepsilon^h$.
+    And when we say "safe" it is by means of recovering the original data source (which doesn't exist anymore at this point).
+\end{definition}
+
+\begin{definition}[Short Code]
+    \label{shortCode}
+    A short code $\overline{s}$ is a special 4-characters hash defining the specific type of imprint.
+
+    Algorithm \ref{algo:shortCode} describes the construction of a short code using the output field type $\Omega$.
+    It uses a 62-characters basis $\mathcal{B}$ using the three following sequences in that order:
+    \begin{itemize}
+        \item The 10 figures: $1234567890$;
+        \item The 26 lower-case alphabet;
+        \item The 26 upper-case alphabet.
+    \end{itemize}
+
+    Let $idx(char)$ be a function that returns the index number (starting at $1$) of the passed character in $\mathcal{B}$.
+    \begin{algorithm}
+        \KwIn{$\Omega$}
+        \KwOut{The corresponding short code}
+        initialize the sum of $\Omega$ characters on that basis: $s \gets 0$; \\
+        \For{$i \gets 1$ \KwTo $\norm{\Omega}$}{
+            $s \gets s + idx(\Omega_i)$;
+        }
+        make it an hexadecimal string representation: $s_{16} := (s)_{16}$; \\
+        hash $\Omega$ with \texttt{MD-5} hashing function: $h := \texttt{md5}(\Omega)$; \\
+        extract and concatenate the first two characters of $s_{16}$ and $h$: $$
+            \overline{s} \gets s_{16}[0] \concat s_{16}[1] \concat h[0] \concat h[1]
+        $$ \\
+        \Return{$\overline{s}$};
+        \caption{Short code $\overline{s}$}
+        \label{algo:shortCode}
+    \end{algorithm}
+    
+    For example, for $\Omega = \texttt{email}$, we have: $\overline{s}(\Omega) := \texttt{0c5a}$
+\end{definition}
+
+\begin{definition}[Variance]
+    \label{variantInvariant}
+    A invariant contact data is a data that is not meant to change in a lifetime.
+    For example, the date of birth is invariant.
+    There is a limited set of variant contact data.
+
+    On the other hand, a variant data may change in time (for example, a postal address where one lives).
+    There is an unlimited list of invariant contact data. An \emph{Empreinte Sociométrique} may even carry multiple of the same types (for example, 
+    if one has moved a lot, he should have as many invariant addresses as places he is been living).
+\end{definition}
+
+\begin{definition}[Corpus]
+    \label{corpus}
+    The corpus of an \emph{Empreinte Sociométrique} is a special concatenation of all the imprints built from the input data using a secret token $T_k$.
+    It is made of variant and invariant imprints.
+
+    Algorithm \ref{algo:corpus} describes its construction.
+
+    Let \texttt{BLOCK\_SEP} and \texttt{SEC\_SEP} be two special string separators \footnote{In our current impmlementation, we use:
+        \begin{itemize}
+            \item The pipe character (\texttt{|}) as \texttt{BLOCK\_SEP};
+            \item The percent character (\texttt{\%}) as \texttt{SEC\_SEP}.
+        \end{itemize}
+    }, \texttt{PREFIX} a system parameter setting a cutting index, and $cut(str, at)$ the cutting string utility.
+
+    Finally, let \texttt{V\_HASH} be the hashing algorithm used by the system.
+    \begin{algorithm}
+        \KwIn{The set of imprints $\mathcal{E}$, a secret token $T_k$}
+        \KwOut{The corpus string}
+        split the variant from the invariant imprints: $\mathcal{V}, \overline{\mathcal{V}} := \mathcal{E}$; \\
+        initialize the invariants string: $\overline{v} \gets 0$; \\
+        \For{$i \gets 1$ \KwTo $\norm{\overline{\mathcal{V}}}$ \KwBy $1$}{
+            $\overline{v} \gets \overline{v} + \overline{\mathcal{V}}_i$; \\
+            \If{$i < \norm{\overline{\mathcal{V}}}$}{
+                $\overline{v} \gets \overline{v} \concat \texttt{BLOCK\_SEP}$; \\
+            }
+        }
+        initialize the variants string: $v \gets 0$; \\
+        \For{$i \gets 1$ \KwTo $\norm{\mathcal{V}}$ \KwBy $1$}{
+            $v \gets v + \mathcal{V}_i$; \\
+            \If{$i < \norm{\mathcal{V}}$}{
+                $v \gets v \concat \texttt{BLOCK\_SEP}$; \\
+            }
+        }
+        concat the core corpus: $c \gets \overline{v} \concat \texttt{SEC\_SEP} \concat v$; \\
+        compress it: $C \gets \zeta(c)$; \\
+        separate prefix $p^-$ from suffix $s^+$ at \texttt{PREFIX}: $p^-, s^+ := cut(C, \texttt{PREFIX})$; \\
+        encrypt the prefix with the token: $\mathfrak{e} \gets \mathfrak{c}(p^-, T_k)$; \\
+        get the length of the encrypted prefix: $l \gets \norm{\mathfrak{e}}$; \\
+        set the version short code: $\upsilon \gets \overline{s}(\texttt{V\_HASH})$; \\
+        build the full corpus $\chi$:\begin{equation}
+            \label{eq:corpus}
+            \chi \gets s^+ \concat \mathfrak{e} \concat \texttt{SEC\_SEP} \concat l \concat \upsilon
+        \end{equation} \\
+        hash the corpus with \texttt{MD-5} to get a 32-characters pseudo-random head string: $H \gets \texttt{md5}(\chi)$; \\
+        \Return{$H \concat \chi$};
+        \caption{Corpus construction}
+        \label{algo:corpus}
+    \end{algorithm}
+\end{definition}
+
+\subsubsection{Signature}
+
+Sometimes, you wouldn't want to take a chance to share the actual corpus, but rather an even safer version of it, which won't allow anyone (including 
+yourself) to rebuild the imprints. That is where the signature comes in handy.
+
+\begin{definition}[Registrar]
+    \label{registrar}
+    A registrar is a special invariant imprint. Built from their equivalent imprints, it includes the following items:
+    \begin{itemize}
+        \item Birth country (with code: \texttt{birthcountry});
+        \item Birth day (\texttt{birthday}) with default format \texttt{dd/MM/yyyy};
+        \item Birth place (\texttt{birthplace});
+        \item Given name (\texttt{givenname});
+        \item Full identity (\texttt{identity}) taking into account country of origin;
+        \item Middle names (\texttt{middlenames});
+        \item Surname (\texttt{surname}).
+    \end{itemize}
+\end{definition}
+
+\begin{definition}[Signature]
+    \label{signature}
+    The signature $\varSigma$ uses the corpus of the \emph{Empreinte Sociométrique} to build a unique yet irreversible identifier to freely share with 
+    no risk whatsoever to go back to the corpus, let alone the original data, from it.
+
+    Algorithm \ref{algo:signature} describes how to build it from the corpus.
+
+    Let $xt(corpus)$ be a function that transforms existing imprints in the corpus to registrars, $hash()$ the \texttt{Blake2b} hashing function 
+    returning its hexadecimal string representation, and $pub(shortCode, shortenedHash)$ the function building a public imprint where the 
+    $shortenedHash$ is the integer value of the imprint's \emph{hash} $\varepsilon^h$ with its first character stripped off\footnote{
+        For example, for a hash value of \texttt{ab12}, you strip off the heading \texttt{a} to get \texttt{b12} and recover the latter as its integer 
+        value \texttt{2834}: $shortenHash(\texttt{ab12}) = \texttt{2834}$
+    }.
+    \begin{algorithm}
+        \KwIn{A corpus $\chi$, the token $T_k$}
+        \KwOut{The signature}
+        extract the set of registrars from the corpus (if any); $\mathcal{R} \gets xt(\chi)$ \\
+        get existing gender $g$ and/or social security number $ss$: $\mathcal{R} \gets \{ g, ss \}$; \\
+        build the prefix $P$ by concatenating the registrars, the gender and the social security \emph{hashes};$$
+            P := \concat {\Big|}_{i=1}^{\norm{\mathcal{R}}} \varepsilon_i^h
+        $$ \\
+        set the hashed prefix: $H_P \gets hash(P)$; \\
+        encrypt the hashed prefix with the token: $E_P \gets \mathcal{c}(H_P, T_k)$; \\
+        finalize the prefix: $P \gets H_P[0] \concat E_P$; \\
+        initialize the empty string $s^\iota$; \\
+        \For{$i \gets 1$ \KwTo $\norm{\mathcal{R}}$ \KwBy $1$}{
+            build its public imprint $\varepsilon_i^\pi$:$$
+                \varepsilon_i^\pi \gets pub(\varepsilon^{\overline{s}}, shortenHash(\mathcal{R}_i))
+            $$ \\
+            $s^\iota \gets s^\iota \concat \varepsilon_i^\pi$; \\
+            \If{$i < norm{\mathcal{R}}$}{
+                $s^\iota \gets s^\iota \concat \texttt{SEC\_SEP}$; \\
+            }
+        }
+        keep the 8 first characters of the \texttt{MD-5} hash of $s^\iota$: $H_{s^\iota} \gets \texttt{md5}(s^\iota)[1..8]$; \\
+        encrypt $s^\iota$ with the token: $E_{s^\iota} \gets \mathfrak{c}(s^\iota, T_k)$; \\
+        finalize the signature $\varSigma$:\begin{equation}
+            \label{eq:signature}
+            \varSigma \gets P \concat \texttt{\%} \concat H_{s^\iota} \concat E_{s^\iota}
+        \end{equation} \\
+        \Return{$\varSigma$};
+        \caption{Signature construction}
+        \label{algo:signature}
+    \end{algorithm}
+
+    The $pub()$ function is where the alteration happens and therefore where lies the irreversibility of the signature and its public imprints.
+    But it can be proven that it is highly unlikely that this alteration, albeit coarse, might lead to false positive when matching signatures, all the 
+    more so if the imprints are numerous in the initial corpus\footnote{and you shouldn't be using too small corpuses when relying on signatures}.
+\end{definition}
+
+\subsubsection{Output}
+
+As you might have noticed, there are two different output we can get from the \emph{Empreinte Sociométrique} algorithms:
+\begin{itemize}
+    \item The full corpus $\chi$ which allows for further processing (like computing its signature) or enhancement (by adding new data to it);
+    \item The signature $\varSigma$ which is an altered version of the corpus for safe public sharing.
+\end{itemize}
+
+Indeed, each person should build its own \emph{Empreinte Sociométrique} step-by-step with his own secret token. Then, he may rebuild specific ones 
+with others he wished to share contact information. For this last situation, he should probably only share the signature.
+That way, each person has his personal database of contact data secured, and can interact with others safely, both parties being able to ensure the 
+other's identity.
+
+% \vfill\eject % To force break column if need be
+% \tableofcontents % Uncomment to add a table of contents
+
+%----------------------------------------------------------------------------------------
+%	REFERENCE LIST
+%----------------------------------------------------------------------------------------
+
+\begin{thebibliography}{99} % Bibliography
+
+\bibitem[1]{empreinteSociometrique:cyd}
+Cyril Dever. \emph{Système de traitement d'une base de données personnelle par un opérateur extérieur}, patent pending \texttt{FR1905778}, 2019.
+
+\end{thebibliography}
+
+%----------------------------------------------------------------------------------------
+
+\onecolumn
+\section*{Appendix}
+
+\begin{table}[htb]
+    \centering
+    \caption{Input data types}
+    \begin{tabular*}{0.75\textwidth}{l|l||l}
+        Code & Description & \textit{Examples} \\
+        \hline \hline
+        \texttt{gender} & Title or gender & \textit{M}, \textit{Mr.}, \textit{1}, \dots \\
+        \hline
+        \texttt{firstname} & First name or given name & \textit{John} \\
+        \hline
+        \texttt{middle} & Middle initials or other names & \textit{J.}, \textit{John} \\
+        \hline
+        \texttt{birthname} & Birth name & \textit{Kennedy} \\
+        \hline
+        \texttt{lastname} & Last name or married name & \textit{Kennedy} \\
+        \hline
+        \texttt{suffix} & Suffix & \textit{Jr.} \\
+        \hline
+        \texttt{birthdate} & Date of birth & \\
+        \hline
+        \texttt{birthplace} & Place of birth & \\
+        \hline
+        \texttt{addresses} & List of postal address & (see Table \ref{table:address}) \\
+        \hline
+        \texttt{aliases} & List of aliases & (see Table \ref{table:aliases}) \\
+        \hline
+        \texttt{emails} & List of e-mail addresses & (see Table \ref{table:emails}) \\
+        \hline
+        \texttt{ids} & List of official IDs & (see Table \ref{table:ids}) \\
+        \hline
+        \texttt{mobiles} & List of mobile phones & (see Table \ref{table:mobiles}) \\
+        \hline
+        \texttt{phones} & List of telephone numbers & (see Table \ref{table:phones}) \\
+        \hline
+        \texttt{socials} & List of social media & (see Table \ref{table:socials}) \\
+        \hline
+        \texttt{updated} & Unix timestamp of collect & \textit{1544529071}
+        \label{table:inputTypes}
+    \end{tabular*}
+\end{table}
+
+\begin{table}[htb]
+    \centering
+    \caption{Address data type}
+    \begin{tabular*}{\textwidth}{l|l||l}
+        Field & Definition & \textit{Possible values (or examples)} \\
+        \hline \hline
+        \texttt{type} & Address type & $\texttt{"birth"} \vee \texttt{"home"} \vee \texttt{"work"}$ \\
+        \hline
+        \texttt{address2} & Additional name & \textit{c/o Mme Dupont} \\
+        \hline
+        \texttt{address3} & Additional address & \textit{Apt. 123} \\
+        \hline
+        \texttt{address4} & Street number and name & \textit{1600 Pennsylvania Ave NW} \\
+        \hline
+        \texttt{address5} & PO Box or locality & \textit{BP 987} \\
+        \hline
+        \texttt{address6} & City and ZIP code & \textit{Washington, DC 20500} \\
+        \hline
+        \texttt{address7} & International destination & \textit{U.S.A.} \\
+        \hline
+        \texttt{city} & City & \textit{Washington} \\
+        \hline
+        \texttt{country} & Country & \textit{United States of America} \\
+        \hline
+        \texttt{fullAddress} & Full address & \textit{1600 Pennsylvania Ave NW, Washington, DC 20500} \\
+        \hline
+        \texttt{streetName} & Street name & \textit{Pennsylvania Ave NW} \\
+        \hline
+        \texttt{streetNumber} & Street number & \textit{1600} \\
+        \hline
+        \texttt{zip} & ZIP code & \textit{DC 20500} \\
+        \hline
+        \texttt{updated} & Time of collect & \textit{1544529071}
+        \label{table:address}
+    \end{tabular*}
+\end{table}
+
+\begin{table}[htb]
+    \centering
+    \caption{Alias data type}
+    \begin{tabular*}{1.05\textwidth}{l|l||l}
+        Field & Definition & \textit{Possible values (or examples)} \\
+        \hline \hline
+        \texttt{type} & Alias type & $\texttt{"commonname"} \vee \texttt{"identity"} \vee \texttt{"np"} \vee \texttt{"pn"} \vee \texttt{"pseudo"} 
+            \vee \texttt{"tnp"} \vee \texttt{"tpn"}$ \\
+        \hline
+        \texttt{value} & Alias value & \textit{John John} \\
+        \hline
+        \texttt{updated} & Time of collect & \textit{1544529071}
+        \label{table:aliases}
+    \end{tabular*}
+\end{table}
+
+\begin{table}[htb]
+    \centering
+    \caption{E-mail data type}
+    \begin{tabular*}{0.75\textwidth}{l|l||l}
+        Field & Definition & \textit{Possible values (or examples)} \\
+        \hline \hline
+        \texttt{type} & E-mail type & $\texttt{"business"} \vee \texttt{"personal"} \dots$ \\
+        \hline
+        \texttt{value} & E-mail address & \textit{john@john.com} \\
+        \hline
+        \texttt{isHash} & If is already hashed & $\texttt{true} \vee \texttt{false}$ \\
+        \hline
+        \texttt{engine} & Hashing algorithm & $\texttt{"blake2"} \vee \texttt{"md5"} \dots$ \\
+        \hline
+        \texttt{updated} & Time of collect & \textit{1544529071}
+        \label{table:emails}
+    \end{tabular*}
+\end{table}
+
+\begin{table}[htb]
+    \centering
+    \caption{ID data type}
+    \begin{tabular*}{1.13\textwidth}{l|l||l}
+        Field & Definition & \textit{Possible values (or examples)} \\
+        \hline \hline
+        \texttt{type} & ID type & $\texttt{"id"} \vee \texttt{"cb"} \vee \texttt{"passport"} \vee \texttt{"registration"} \vee \texttt{"serial"} \vee 
+            \texttt{"ss"} \vee \texttt{"udid"}$ \\
+        \hline
+        \texttt{value} & ID value & \textit{1234567890abcdef} \\
+        \hline
+        \texttt{isHash} & If is already hashed & $\texttt{true} \vee \texttt{false}$ \\
+        \hline
+        \texttt{engine} & Hashing algorithm & $\texttt{"blake2"} \vee \texttt{"md5"} \dots$ \\
+        \hline
+        \texttt{updated} & Time of collect & \textit{1544529071}
+        \label{table:ids}
+    \end{tabular*}
+\end{table}
+
+\begin{table}[htb]
+    \centering
+    \caption{Mobile phone data type}
+    \begin{tabular*}{0.75\textwidth}{l|l||l}
+        Field & Definition & \textit{Possible values (or examples)} \\
+        \hline \hline
+        \texttt{type} & Mobile phone type & $\texttt{"business"} \vee \texttt{"personal"} \dots$ \\
+        \hline
+        \texttt{value} & Mobile phone number & \textit{+33 (0) 623 456 789} \\
+        \hline
+        \texttt{isHash} & If is already hashed & $\texttt{true} \vee \texttt{false}$ \\
+        \hline
+        \texttt{engine} & Hashing algorithm & $\texttt{"blake2"} \vee \texttt{"md5"} \dots$ \\
+        \hline
+        \texttt{format} & Format & \texttt{"+dd (d) ddd ddd ddd"} \\
+        \hline
+        \texttt{updated} & Time of collect & \textit{1544529071}
+        \label{table:mobiles}
+    \end{tabular*}
+\end{table}
+
+\begin{table}[htb]
+    \centering
+    \caption{Telephone data type}
+    \begin{tabular*}{0.75\textwidth}{l|l||l}
+        Field & Definition & \textit{Possible values (or examples)} \\
+        \hline \hline
+        \texttt{type} & Telephone type & $\texttt{"business"} \vee \texttt{"personal"} \dots$ \\
+        \hline
+        \texttt{value} & Phone number & \textit{+33 (0) 123 456 789} \\
+        \hline
+        \texttt{isHash} & If is already hashed & $\texttt{true} \vee \texttt{false}$ \\
+        \hline
+        \texttt{engine} & Hashing algorithm & $\texttt{"blake2"} \vee \texttt{"md5"} \dots$ \\
+        \hline
+        \texttt{format} & Format & \texttt{"+dd (d) ddd ddd ddd"} \\
+        \hline
+        \texttt{updated} & Time of collect & \textit{1544529071}
+        \label{table:phones}
+    \end{tabular*}
+\end{table}
+
+\begin{table}[htb]
+    \centering
+    \caption{Social media data type}
+    \begin{tabular*}{0.9\textwidth}{l|l||l}
+        Field & Definition & \textit{Possible values (or examples)} \\
+        \hline \hline
+        \texttt{type} & Alias type & $\texttt{"facebook"} \vee \texttt{"linkedin"} \vee \texttt{"twitter"} \vee \texttt{"youtube"} \dots$ \\
+        \hline
+        \texttt{value} & Alias value & \textit{@john} \\
+        \hline
+        \texttt{updated} & Time of collect & \textit{1544529071}
+        \label{table:socials}
+    \end{tabular*}
+\end{table}
+
+\begin{table}[htb]
+    \centering
+    \caption{List of base output codes}
+    \begin{tabular*}{0.6\textwidth}{l|l}
+        Code & Description \\
+        \hline \hline
+        \texttt{adresse2} & Postal address line 2 \\
+        \hline
+        \texttt{adresse3} & Postal address line 3 \\
+        \hline
+        \texttt{adresse4} & Postal address line 4 \\
+        \hline
+        \texttt{adresse5} & Postal address line 5 \\
+        \hline
+        \texttt{adresse} & Full postal address \\
+        \hline
+        \texttt{civ} & Title \\
+        \hline
+        \texttt{cp} & Postal (or ZIP) code \\
+        \hline
+        \texttt{ddn} & Date of birth \\
+        \hline
+        \texttt{dpt} & Department, eg.\texttt{75} \\
+        \hline
+        \texttt{dv} & Department and city, eg. \texttt{75 PARIS} \\
+        \hline
+        \texttt{email} & E-mail address \\
+        \hline
+        \texttt{facebook} & Facebook ID \\
+        \hline
+        \texttt{instagram} & Instagram ID \\
+        \hline
+        \texttt{linkedin} & LinkedIn ID \\
+        \hline
+        \texttt{pinterest} & Pinterest ID \\
+        \hline
+        \texttt{snapchat} & Snapchat ID \\
+        \hline
+        \texttt{twitter} & Twitter ID or screen name \\
+        \hline
+        \texttt{youtube} & Youtube ID \\
+        \hline
+        \texttt{in} & Initials and last name \\
+        \hline
+        \texttt{ini} & Initials \\
+        \hline
+        \texttt{middle\_ini} & Middle initial(s) \\
+        \hline
+        \texttt{mob} & Mobile phone number \\
+        \hline
+        \texttt{ni} & Last name and initials \\
+        \hline
+        \texttt{nom} & Last (or birth) name \\
+        \hline
+        \texttt{np} & Last and first names \\
+        \hline
+        \texttt{no} & Street number \\
+        \hline
+        \texttt{pays} & Country \\
+        \hline
+        \texttt{pn} & First and last names \\
+        \hline
+        \texttt{prenom} & First (or given) name \\
+        \hline
+        \texttt{middle} & Middle names \\
+        \hline
+        \texttt{raisonsociale} & Corporate name \\
+        \hline
+        \texttt{tel} & Telephone / landline number \\
+        \hline
+        \texttt{tin} & Title + Initials + Last name \\
+        \hline
+        \texttt{tn} & Title and last name \\
+        \hline
+        \texttt{tni} & Title + Last name + Initials \\
+        \hline
+        \texttt{tnp} & Title + Last name + First name \\
+        \hline
+        \texttt{tpn} & Title + First name + Last name \\
+        \hline
+        \texttt{ville} & City \\
+        \hline
+        \texttt{voie} & Street name
+        \label{table:outputCodes}
+    \end{tabular*}
+\end{table}
+
+\begin{table}[htb]
+    \centering
+    \caption{List of imprint type codes}
+    \begin{tabular*}{0.35\textwidth}{l|c}
+        Type & Code \\
+        \hline \hline
+        Address & \texttt{ad} \\
+        \hline
+        Alias & \texttt{al} \\
+        \hline
+        Birth date & \texttt{4d} \\
+        \hline
+        Birth name & \texttt{2n} \\
+        \hline
+        Birth place & \texttt{5p} \\
+        \hline
+        Country & \texttt{8c} \\
+        \hline
+        E-mail & \texttt{ml} \\
+        \hline
+        Facebook & \texttt{fb} \\
+        \hline
+        First name & \texttt{3n} \\
+        \hline
+        Gender & \texttt{1x} \\
+        \hline
+        Instagram & \texttt{ig} \\
+        \hline
+        LinkedIn & \texttt{li} \\
+        \hline
+        Marital name & \texttt{mn} \\
+        \hline
+        Middle names & \texttt{7m} \\
+        \hline
+        Mobile phone & \texttt{mb} \\
+        \hline
+        Pinterest & \texttt{pi} \\
+        \hline
+        Registration & \texttt{rg} \\
+        \hline
+        Snapchat & \texttt{sn} \\
+        \hline
+        Social security number & \texttt{6s} \\
+        \hline
+        Telephone number & \texttt{tl} \\
+        \hline
+        Twitter & \texttt{tw} \\
+        \hline
+        Youtube & \texttt{yt}
+        \label{table:empreintes}
+    \end{tabular*}
+\end{table}
+
+
+\end{document}
