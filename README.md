@@ -93,6 +93,11 @@ This library relies on the following peer dependencies:
 * [`moment`](https://www.npmjs.com/package/moment);
 * [`monet`](https://www.npmjs.com/package/monet).
 
+Besides, to run the tests, you would need to install [`live-server`|(https://www.npmjs.com/package/live-server):
+```console
+npm i -g live-server
+```
+
 
 ### License
 
