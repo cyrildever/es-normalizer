@@ -22,7 +22,7 @@ export const Dictionary = (set: DataSet): Dictionary => ({
 })
 
 export const getSet = (data: string): DataSet =>
-  Object.fromEntries(data.split(/\n/g).map(line => line.split(/\t/g, 2)))
+  Object.fromEntries(data.split(/\n/g).map(line => line.split(/\t/g, 2))) as DataSet
 
 export * from './address.dico'
 export * from './firstname.dico'
