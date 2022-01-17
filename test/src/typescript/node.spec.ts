@@ -188,7 +188,11 @@ describe('Normalize', () => {
       normalized.some().should.equal('+33 (0) 723 456 789')
     })
     it('should reject landline phone numbers', () => {
-      const normalized = normalize('01.23.45.67.89', Mobile)
+      let normalized = normalize('01.23.45.67.89', Mobile)
+      normalized.isNone().should.be.true
+
+      // All zero is not a valid number
+      normalized = normalize('06 00 00 00 00', Mobile)
       normalized.isNone().should.be.true
     })
   })
@@ -213,6 +217,10 @@ describe('Normalize', () => {
       normalized.isNone().should.be.true
 
       normalized = normalize('not-even-close-to-a-phone-number', PhoneNumber)
+      normalized.isNone().should.be.true
+
+      // All zero is not a valid number
+      normalized = normalize('01 00 00 00 00', PhoneNumber)
       normalized.isNone().should.be.true
     })
   })
