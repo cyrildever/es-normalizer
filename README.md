@@ -27,7 +27,7 @@ npm i es-normalizer
 To get a normalized string, you simply need to use the `normalize()` method passing it the data, a normalizer function and eventual arguments.
 There are currently eleven specific normalizer functions and a generic one:
 * `Any`: the generic normalizer should be used if no specific normalizer exists;
-* `AddressLine`: pass any address line through it to get a normalized address, eg. `8, rue Henner` becomes `8 RUE HENNER`;
+* `AddressLine`: pass any address line through it to get a normalized address, eg. `8, rue Henner` becomes `8 RUE HENNER`, and eventually `true` as parameter when trying to normalize a French address line 1 to also transform the title, eg. `Monsieur Cyril Dever` should then become `1 CYRIL DEVER` when passed `true` instead of `MONSIEUR CYRIL DEVER` for the default behaviour;
 * `City`: for normalizing city names (it removes any Cedex mention in French address, for instance);
 * `CodePostalFrance`: for French zip code;
 * `DateOfBirth`: pass a date and up to two parameters: the input format (eg. `YYYY-MM-DD`) and the output format wished (eg. `normalizer.ISO_FORMAT`), the default values being respectively the ISO format and the French date format;
@@ -46,7 +46,11 @@ const anyStringNormalized = esNormalizer.normalize('#This is any String(). ', es
 // THIS IS ANY STRING
 console.log(anyStringNormalized.getOrElse(''))
 
-const addressLine4Normalized = esNormalizer.normalize('24, rué de Maubeuge', esNormalizer.AddressLine)
+const addressLine1Normalized = esNormalizer.normalize('Monsieur Cyril Dever', esNormalizer.AddressLine(true))
+// 1 CYRIL DEVER
+console.log(addressLine1Normalized.getOrElse(''))
+
+const addressLine4Normalized = esNormalizer.normalize('24, rué de Maubeuge', esNormalizer.AddressLine())
 // 24 RUE MAUBEUGE
 console.log(addressLine4Normalized.getOrElse(''))
 
