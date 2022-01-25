@@ -88,9 +88,15 @@ describe('Normalize', () => {
 
       normalized = normalize('2A165', CodePostalFrance)
       normalized.some().should.equal('20165')
+
+      normalized = normalize('75009 PARIS', CodePostalFrance)
+      normalized.some().should.equal('75009')
     })
     it('should reject any invalid code postal', () => {
-      const normalized = normalize('aghfkhgk', CodePostalFrance)
+      let normalized = normalize('aghfkhgk', CodePostalFrance)
+      normalized.isNone().should.be.true
+
+      normalized = normalize('75009PARIS', CodePostalFrance)
       normalized.isNone().should.be.true
     })
   })
