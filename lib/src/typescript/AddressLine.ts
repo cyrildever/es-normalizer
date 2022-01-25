@@ -1,10 +1,17 @@
 import { Maybe } from 'monet'
 
 import { uniformize } from './index'
-import { Dictionary, addressDico, getSet } from './Dictionary'
+import { Dictionary, addressDico, getSet, titleDico } from './Dictionary'
 
-const set = getSet(addressDico)
-const dic = Dictionary(set)
+const setAdrsDic = getSet(addressDico)
+const adrsDico = Dictionary(setAdrsDic)
 
-export const AddressLine = (data: string): Maybe<string> =>
-  uniformize(data).map(dic.translateText)
+const setTitleDic = getSet(titleDico)
+const ttlDico = Dictionary(setTitleDic)
+
+export const AddressLine = (transformTitle = false) => (data: string): Maybe<string> => {
+  const addressLine = uniformize(data).map(adrsDico.translateText)
+  return transformTitle === true
+    ? uniformize(data).map(ttlDico.translateText)
+    : addressLine
+}
