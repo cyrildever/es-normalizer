@@ -33,15 +33,15 @@ export const DateOfBirth = (input?: Format, output?: Format) => (data: string): 
   } else if (inputFormat.toLowerCase() === Milliseconds) {
     d = moment(parseInt(data))
   } else {
-    d = moment(data, inputFormat.replace(separators, '-').toUpperCase())
+    d = moment(data, inputFormat.replaceAll(separators, '-').toUpperCase())
   }
   if (!d.isValid()) {
     return None<string>()
   }
-  const out = d.format(outputFormat.replace(separators, '-').toUpperCase())
+  const out = d.format(outputFormat.replaceAll(separators, '-').toUpperCase())
   const matches = outputFormat.match(separators)
   if (matches === null) {
     return Some(out)
   }
-  return Some(out.replace(/-/g, matches[0]))
+  return Some(out.replaceAll(/-/g, matches[0]))
 }
