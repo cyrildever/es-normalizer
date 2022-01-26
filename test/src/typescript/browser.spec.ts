@@ -240,7 +240,10 @@ describe('Normalize', () => {
       normalized.some().should.equal('221B')
 
       normalized = normalize('1 bis C', StreetNumber)
-      normalized.some().should.equal('1B C')
+      normalized.some().should.equal('1B')
+
+      normalized = normalize('7ter rue Henner', StreetNumber)
+      normalized.some().should.equal('7T')
     })
   })
 
