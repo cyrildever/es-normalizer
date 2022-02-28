@@ -28,6 +28,7 @@ To get a normalized string, you simply need to use the `normalize()` method pass
 There are currently eleven specific normalizer functions and a generic one:
 * `Any`: the generic normalizer should be used if no specific normalizer exists;
 * `AddressLine`: pass any address line through it to get a normalized address, eg. `8, rue Henner` becomes `8 RUE HENNER`, and eventually `true` as parameter when trying to normalize a French address line 1 to also transform the title, eg. `Monsieur Cyril Dever` should then become `1 CYRIL DEVER` when passed `true` instead of `MONSIEUR CYRIL DEVER` for the default behaviour;
+* `AddressLine6`: the French address line 6 with the department inserted in between the zip code and the city as in the Empreinte Sociométrique implementation (eg. `75009 75 PARIS`);
 * `City`: for normalizing city names (it removes any Cedex mention in French address, for instance);
 * `CodePostalFrance`: for French zip code;
 * `DateOfBirth`: pass a date and up to two parameters: the input format (eg. `YYYY-MM-DD`) and the output format wished (eg. `normalizer.ISO_FORMAT`), the default values being respectively the ISO format and the French date format;
@@ -53,6 +54,14 @@ console.log(addressLine1Normalized.getOrElse(''))
 const addressLine4Normalized = esNormalizer.normalize('24, rué de Maubeuge', esNormalizer.AddressLine())
 // 24 RUE MAUBEUGE
 console.log(addressLine4Normalized.getOrElse(''))
+
+let addressLine6Normalized = esNormalizer.normalize('75009 .# Paris', esNormalizer.AddressLine6())
+// 75009 75 PARIS
+console.log(addressLine6Normalized.getOrElse(''))
+
+addressLine6Normalized = esNormalizer.normalize('75009 .# Paris', esNormalizer.AddressLine6(false))
+// 75009 PARIS
+console.log(addressLine6Normalized.getOrElse(''))
 
 const cityNormalized = esNormalizer.normalize('Paris Cedex 09', esNormalizer.City)
 // PARIS

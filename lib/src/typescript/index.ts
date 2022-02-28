@@ -34,6 +34,7 @@ export const Any = (data: string): Maybe<string> =>
   uniformize(data)
 
 export * from './AddressLine'
+export * from './AddressLine6'
 export * from './City'
 export * from './CodePostalFrance'
 export * from './DateOfBirth'

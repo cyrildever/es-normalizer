@@ -1,7 +1,6 @@
 import {
-  normalize, uniformize, Any,
-  AddressLine, City, CodePostalFrance, DateOfBirth, DepartementFrance, Email, FirstName, Mobile, PhoneNumber, StreetNumber, Title,
-  ISO_DATE, FRENCH_DATE, Timestamp, Milliseconds
+  normalize, uniformize, AddressLine, AddressLine6, Any, City, CodePostalFrance, DateOfBirth, DepartementFrance,
+  Email, FirstName, Mobile, PhoneNumber, StreetNumber, Title, ISO_DATE, FRENCH_DATE, Timestamp, Milliseconds
 } from '../../../lib/src/typescript/index'
 
 describe('Normalize', () => {
@@ -44,12 +43,26 @@ describe('Normalize', () => {
       // French address line 5
       normalized = normalize('Lieu-dit du domaine Vert', AddressLine())
       normalized.some().should.equal('LIEU DIT DOM VERT')
+    })
+  })
 
-      // French address line 6
-      normalized = normalize('$.75009        Paris', AddressLine())
-      normalized.some().should.equal('75009 PARIS')
+  describe('AddressLine6', () => {
+    it('should normalize safely the French address line 6', () => {
+      let normalized = normalize('$.75009        Paris', AddressLine6())
+      normalized.some().should.equal('75009 75 PARIS')
 
-      normalized = normalize('75948 Paris Cedex 19', AddressLine())
+      normalized = normalize('75948 Paris Cedex 19', AddressLine6())
+      normalized.some().should.equal('75948 75 PARIS CDX 19')
+
+      // If no DepartmentFrance should be inserted
+      normalized = normalize('75948 Paris Cedex 19', AddressLine6(false))
+      normalized.some().should.equal('75948 PARIS CDX 19')
+
+      // If a DepartmentFrance is already present
+      normalized = normalize('75948 75 Paris Cedex 19', AddressLine6())
+      normalized.some().should.equal('75948 75 PARIS CDX 19')
+
+      normalized = normalize('75948 75 Paris Cedex 19', AddressLine6(false))
       normalized.some().should.equal('75948 PARIS CDX 19')
     })
   })
