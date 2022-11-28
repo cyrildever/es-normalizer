@@ -1,5 +1,13 @@
 # CHANGELOG.md
 
+## 2.1.7 (2022-11-28)
+
+Features:
+
+  - `moment` and `monet` become actual dependencies.
+  - This should be the last version using the latter because it forces us to keep TypeScript version at `~4.7`.
+
+
 ## 2.1.0 (2022-02-27)
 
 Features:
@@ -21,7 +29,7 @@ Features:
 
 Features:
 
-  - Original production version
+  - Original production version.
 
 
 <hr />

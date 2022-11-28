@@ -102,7 +102,7 @@ console.log(titleNormalized.getOrElse(''))
 
 ##### Dependencies
 
-This library relies on the following peer dependencies:
+This library relies on the following dependencies:
 * [`moment`](https://www.npmjs.com/package/moment);
 * [`monet`](https://www.npmjs.com/package/monet).
 
