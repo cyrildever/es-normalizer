@@ -1,4 +1,4 @@
-import { Maybe, Some } from 'monet'
+import { Maybe, Some } from 'ts-utls'
 
 import { uniformize, normalize } from './index'
 import { CodePostalFrance } from './CodePostalFrance'

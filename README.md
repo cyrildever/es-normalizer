@@ -104,7 +104,7 @@ console.log(titleNormalized.getOrElse(''))
 
 This library relies on the following dependencies:
 * [`moment`](https://www.npmjs.com/package/moment);
-* [`monet`](https://www.npmjs.com/package/monet).
+* [`ts-utls`](https://www.npmjs.com/package/ts-utls).
 
 Besides, to run the tests, you would need to install [`live-server`](https://www.npmjs.com/package/live-server):
 ```console

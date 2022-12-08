@@ -1,4 +1,4 @@
-import { Maybe, Some } from 'monet'
+import { Maybe, Some } from 'ts-utls'
 
 import { uniformize } from './index'
 import { Dictionary, addressDico, getSet } from './Dictionary'

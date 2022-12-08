@@ -1,5 +1,5 @@
 import moment from 'moment'
-import { Maybe, None, Some } from 'monet'
+import { Maybe, None, Some } from 'ts-utls'
 
 export const FRENCH_DATE: Format = 'DD/MM/YYYY'
 export const ISO_DATE: Format = 'YYYYMMDD'

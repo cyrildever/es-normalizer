@@ -1,4 +1,4 @@
-import { Maybe, None, Some } from 'monet'
+import { Maybe, None, Some } from 'ts-utls'
 
 export const normalize = (data: string, normalizer: (d: string) => Maybe<string>): Maybe<string> => normalizer(data)
 

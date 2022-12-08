@@ -1,4 +1,4 @@
-import { Maybe, None, Some } from 'monet'
+import { Maybe, None, Some } from 'ts-utls'
 
 import { uniformize } from './index'
 import { Dictionary, titleDico, getSet } from './Dictionary'

@@ -1,10 +1,18 @@
 # CHANGELOG.md
 
+## 2.2.0 (2022-12-08)
+
+Features:
+
+  - Remove `monet` from dependencies to enable TypeScript versions higher than `4.7`.
+  - The monads were replaced by the ones from the `ts-utls` library.
+
+
 ## 2.1.7 (2022-11-28)
 
 Features:
 
-  - `moment` and `monet` become actual dependencies.
+  - `moment` and `ts-utls` become actual dependencies.
   - This should be the last version using the latter because it forces us to keep TypeScript version at `~4.7`.
 
 
