@@ -1,5 +1,12 @@
 # CHANGELOG.md
 
+## 2.2.2 (2023-03-23)
+
+Features:
+
+  - Now compiles with TypeScript `5.0` and higher.
+
+
 ## 2.2.0 (2022-12-08)
 
 Features:

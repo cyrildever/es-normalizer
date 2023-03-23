@@ -114,7 +114,7 @@ npm i -g live-server
 
 ### License
 
-This module is distributed under a MIT license.
+This module is distributed under a MIT license. \
 See the [LICENSE](LICENSE) file.
 
 
