@@ -1,6 +1,6 @@
 {
   "name": "es-normalizer",
-  "version": "2.2.4",
+  "version": "2.2.5",
   "description": "Contact data normalization adapted from the Empreinte Sociométrique's normalizers",
   "main": "dist/lib/src/typescript/index.js",
   "types": "dist/lib/src/typescript/index.d.ts",
@@ -30,22 +30,22 @@
   "homepage": "https://github.com/cyrildever/es-normalizer#readme",
   "dependencies": {
     "moment": "^2.29.4",
-    "ts-utls": "^1.5.16"
+    "ts-utls": "^1.5.17"
   },
   "devDependencies": {
     "@types/chai": "^4.3.5",
     "@types/mocha": "^10.0.1",
-    "@types/node": "^20.3.2",
-    "@typescript-eslint/eslint-plugin": "^5.60.1",
-    "@typescript-eslint/parser": "^5.60.1",
+    "@types/node": "^20.4.2",
+    "@typescript-eslint/eslint-plugin": "^6.1.0",
+    "@typescript-eslint/parser": "^6.1.0",
     "browserify": "^17.0.0",
     "chai": "^4.3.7",
-    "eslint": "^8.43.0",
+    "eslint": "^8.45.0",
     "eslint-plugin-no-loops": "~0.3.0",
     "mocha": "^10.2.0",
-    "terser": "^5.18.1",
+    "terser": "^5.19.1",
     "ts-node": "^10.9.1",
     "tsify": "^5.0.4",
-    "typescript": "^5.1.3"
+    "typescript": "^5.1.6"
   }
 }

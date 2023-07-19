@@ -10,7 +10,7 @@ type Timestamp = typeof Timestamp
 export const Milliseconds = 'timestamp_millis'
 type Milliseconds = typeof Milliseconds
 
-type Format = Timestamp | Milliseconds | string
+type Format = Timestamp | Milliseconds | string // eslint-disable-line @typescript-eslint/no-redundant-type-constituents
 
 // TODO Enrich with other separators?
 const separators = RegExp(/[-:/\s]+/g)
