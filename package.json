@@ -1,6 +1,6 @@
 {
   "name": "es-normalizer",
-  "version": "2.2.8",
+  "version": "2.2.9",
   "description": "Contact data normalization adapted from the Empreinte Sociométrique's normalizers",
   "main": "dist/lib/src/typescript/index.js",
   "types": "dist/lib/src/typescript/index.d.ts",
@@ -9,7 +9,7 @@
     "minify": "terser dist/esNormalizer-${npm_package_version}.js -c -m -o dist/esNormalizer-${npm_package_version}.min.js",
     "compile": "eslint lib --ext .ts && tsc",
     "fix": "eslint lib --ext .ts --fix",
-    "test": "tsc && mocha 'test/src/typescript/node.spec.ts' --require ts-node/register && browserify ./dist/test/src/typescript/browser.spec.js -o dist/test/src/typescript/index.js && live-server --port=9001 --mount=/:test/src/typescript",
+    "test": "tsc && mocha 'test/src/typescript/node.spec.ts' --require ts-node/register && browserify ./dist/test/src/typescript/browser.spec.js -o dist/test/src/typescript/index.js && live-server --port=10001 --mount=/:test/src/typescript",
     "fix-test": "eslint test --ext .ts --fix"
   },
   "repository": {
@@ -29,23 +29,23 @@
   },
   "homepage": "https://github.com/cyrildever/es-normalizer#readme",
   "dependencies": {
-    "moment": "^2.29.4",
-    "ts-utls": "^1.5.20"
+    "moment": "^2.30.1",
+    "ts-utls": "^1.5.23"
   },
   "devDependencies": {
-    "@types/chai": "^4.3.9",
-    "@types/mocha": "^10.0.3",
-    "@types/node": "^20.8.9",
-    "@typescript-eslint/eslint-plugin": "^6.9.0",
-    "@typescript-eslint/parser": "^6.9.0",
+    "@types/chai": "^4.3.14",
+    "@types/mocha": "^10.0.6",
+    "@types/node": "^20.12.4",
+    "@typescript-eslint/eslint-plugin": "^7.5.0",
+    "@typescript-eslint/parser": "^7.5.0",
     "browserify": "^17.0.0",
-    "chai": "^4.3.10",
-    "eslint": "^8.52.0",
+    "chai": "^4.4.0",
+    "eslint": "^8.57.0",
     "eslint-plugin-no-loops": "~0.3.0",
-    "mocha": "^10.2.0",
-    "terser": "^5.22.0",
-    "ts-node": "^10.9.1",
+    "mocha": "^10.4.0",
+    "terser": "^5.30.3",
+    "ts-node": "^10.9.2",
     "tsify": "^5.0.4",
-    "typescript": "^5.2.2"
+    "typescript": "^5.4.4"
   }
 }
