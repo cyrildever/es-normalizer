@@ -17,6 +17,7 @@ describe('Normalize', () => {
     })
   })
 
+  /* eslint-disable @typescript-eslint/no-unused-expressions */
   describe('AddressLine', () => {
     it('should normalize safely any type of address line', () => {
       // Frendh address line 1
@@ -288,4 +289,5 @@ describe('Normalize', () => {
       normalized.some().should.equal('0')
     })
   })
+  /* eslint-enable @typescript-eslint/no-unused-expressions */
 })

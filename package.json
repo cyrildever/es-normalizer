@@ -1,16 +1,16 @@
 {
   "name": "es-normalizer",
-  "version": "2.2.9",
+  "version": "2.2.10",
   "description": "Contact data normalization adapted from the Empreinte Sociométrique's normalizers",
   "main": "dist/lib/src/typescript/index.js",
   "types": "dist/lib/src/typescript/index.d.ts",
   "scripts": {
     "browserify": "browserify lib/src/typescript/index.ts --debug -p tsify -s esNormalizer -o dist/esNormalizer-${npm_package_version}.js",
     "minify": "terser dist/esNormalizer-${npm_package_version}.js -c -m -o dist/esNormalizer-${npm_package_version}.min.js",
-    "compile": "eslint lib --ext .ts && tsc",
-    "fix": "eslint lib --ext .ts --fix",
+    "compile": "eslint lib/**/*.ts && tsc",
+    "fix": "eslint lib/**/*.ts --fix",
     "test": "tsc && mocha 'test/src/typescript/node.spec.ts' --require ts-node/register && browserify ./dist/test/src/typescript/browser.spec.js -o dist/test/src/typescript/index.js && live-server --port=10001 --mount=/:test/src/typescript",
-    "fix-test": "eslint test --ext .ts --fix"
+    "fix-test": "eslint test/**/*.ts --fix"
   },
   "repository": {
     "type": "git",
@@ -30,22 +30,25 @@
   "homepage": "https://github.com/cyrildever/es-normalizer#readme",
   "dependencies": {
     "moment": "^2.30.1",
-    "ts-utls": "^1.5.23"
+    "ts-utls": "^1.5.26"
   },
   "devDependencies": {
-    "@types/chai": "^4.3.14",
-    "@types/mocha": "^10.0.6",
-    "@types/node": "^20.12.4",
-    "@typescript-eslint/eslint-plugin": "^7.5.0",
-    "@typescript-eslint/parser": "^7.5.0",
+    "@eslint/eslintrc": "^3.1.0",
+    "@eslint/js": "^9.10.0",
+    "@types/chai": "^4.3.19",
+    "@types/mocha": "^10.0.7",
+    "@types/node": "^22.5.4",
+    "@typescript-eslint/eslint-plugin": "^8.5.0",
+    "@typescript-eslint/parser": "^8.5.0",
     "browserify": "^17.0.0",
-    "chai": "^4.4.0",
-    "eslint": "^8.57.0",
-    "eslint-plugin-no-loops": "~0.3.0",
-    "mocha": "^10.4.0",
-    "terser": "^5.30.3",
+    "chai": "^4.5.0",
+    "eslint": "^9.10.0",
+    "eslint-plugin-no-loops": "~0.4.0",
+    "globals": "^15.9.0",
+    "mocha": "^10.7.3",
+    "terser": "^5.32.0",
     "ts-node": "^10.9.2",
     "tsify": "^5.0.4",
-    "typescript": "^5.4.4"
+    "typescript": "^5.6.2"
   }
 }
