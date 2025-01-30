@@ -1,7 +1,9 @@
+eslint.config.mjs
 tsconfig.json
 node_modules
 lib
 test
 *.tgz
+.gitignore
 dist/esNormalizer-*.js
 documentation/*
