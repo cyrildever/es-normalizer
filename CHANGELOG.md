@@ -1,5 +1,12 @@
 # CHANGELOG.md
 
+## 2.3.0 (2026-06-11)
+
+Features:
+
+  - Move to TypeScript 6 / Chai 6 / Mocha 11.
+
+
 ## 2.2.2 (2023-03-23)
 
 Features:

@@ -1,3 +1,9 @@
+// Side-effect import: registers the `.should` getter (runtime) and loads its
+// global type augmentation. Chai 6 ships no types, so the augmentation comes
+// from @types/chai's register-should.d.ts. Mocha itself is loaded as a global
+// via the <script> tag in index.html, so it is not imported (and not bundled).
+import 'chai/register-should'
+
 import {
   normalize, uniformize, AddressLine, AddressLine6, Any, City, CodePostalFrance, DateOfBirth, DepartementFrance,
   Email, FirstName, Mobile, PhoneNumber, StreetNumber, Title, ISO_DATE, FRENCH_DATE, Timestamp, Milliseconds

@@ -1,15 +1,18 @@
 {
   "name": "es-normalizer",
-  "version": "2.2.12",
+  "version": "2.3.0",
   "description": "Contact data normalization adapted from the Empreinte Sociométrique's normalizers",
   "main": "dist/lib/src/typescript/index.js",
   "types": "dist/lib/src/typescript/index.d.ts",
   "scripts": {
-    "browserify": "browserify lib/src/typescript/index.ts --debug -p tsify -s esNormalizer -o dist/esNormalizer-${npm_package_version}.js",
-    "minify": "terser dist/esNormalizer-${npm_package_version}.js -c -m -o dist/esNormalizer-${npm_package_version}.min.js",
+    "bundle": "esbuild lib/src/typescript/index.ts --bundle --sourcemap --platform=browser --format=iife --global-name=esNormalizer --outfile=dist/esNormalizer-${npm_package_version}.js",
+    "minify": "esbuild lib/src/typescript/index.ts --bundle --minify --platform=browser --format=iife --global-name=esNormalizer --outfile=dist/esNormalizer-${npm_package_version}.min.js",
     "compile": "eslint lib/**/*.ts && tsc",
     "fix": "eslint lib/**/*.ts --fix",
-    "test": "tsc && mocha 'test/src/typescript/node.spec.ts' --require ts-node/register && browserify ./dist/test/src/typescript/browser.spec.js -o dist/test/src/typescript/index.js && live-server --port=10001 --mount=/:test/src/typescript",
+    "test": "npm run test-node && npm run test-browser",
+    "test-browser": "tsc && esbuild test/src/typescript/browser.spec.ts --bundle --outfile=dist/test/src/typescript/index.js --platform=browser --format=iife && live-server --port=10001 --mount=/:test/src/typescript",
+    "test-node": "tsc && esbuild test/src/typescript/node.spec.ts --bundle --outfile=dist/test/node.spec.cjs --platform=node --format=cjs --external:mocha && mocha dist/test/node.spec.cjs",
+    "test:ci": "tsc && esbuild test/src/typescript/node.spec.ts --bundle --outfile=dist/test/node.spec.cjs --platform=node --format=cjs --external:mocha && mocha dist/test/node.spec.cjs",
     "fix-test": "eslint test/**/*.ts --fix"
   },
   "repository": {
@@ -33,22 +36,19 @@
     "ts-utls": "^1.5.27"
   },
   "devDependencies": {
-    "@eslint/eslintrc": "^3.3.3",
+    "@eslint/eslintrc": "^3.3.5",
     "@eslint/js": "^9.39.2",
-    "@types/chai": "^4.3.19",
+    "@types/chai": "^5.2.3",
     "@types/mocha": "^10.0.10",
-    "@types/node": "^25.0.3",
-    "@typescript-eslint/eslint-plugin": "^8.51.0",
-    "@typescript-eslint/parser": "^8.51.0",
-    "browserify": "^17.0.1",
-    "chai": "^4.5.0",
+    "@types/node": "^25.9.3",
+    "@typescript-eslint/eslint-plugin": "^8.61.0",
+    "@typescript-eslint/parser": "^8.61.0",
+    "chai": "^6.2.2",
+    "esbuild": "^0.28.0",
     "eslint": "^9.39.2",
     "eslint-plugin-no-loops": "~0.4.0",
     "globals": "^17.0.0",
-    "mocha": "^10.7.3",
-    "terser": "^5.44.1",
-    "ts-node": "^10.9.2",
-    "tsify": "^5.0.4",
-    "typescript": "^5.9.3"
+    "mocha": "^11.7.6",
+    "typescript": "^6.0.3"
   }
 }

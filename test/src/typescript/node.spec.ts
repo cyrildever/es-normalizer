@@ -1,6 +1,8 @@
-import * as chai from 'chai'
-chai.should()
 import 'mocha'
+// Side-effect import: registers the `.should` getter (runtime) and loads its
+// global type augmentation. Chai 6 ships no types, so the augmentation comes
+// from @types/chai's register-should.d.ts.
+import 'chai/register-should'
 
 import {
   normalize, uniformize, AddressLine, AddressLine6, Any, City, CodePostalFrance, DateOfBirth, DepartementFrance,
