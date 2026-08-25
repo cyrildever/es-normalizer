@@ -6,4 +6,5 @@ test
 *.tgz
 .gitignore
 dist/esNormalizer-*.js
+dist/esNormalizer-*.js.map
 documentation/*
