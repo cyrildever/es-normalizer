@@ -1,5 +1,13 @@
 # CHANGELOG.md
 
+## 2.5.0 (2026-10-20)
+
+Features:
+
+  - New address forms: `CHEM` (`CH`), `FG` (`FBG`), `PROMENADE` (`PROM`), `CHAUSSEE` and `CHAU` (`CHS`), `ZONE INDUSTRIELLE` and `Z I` (`ZI`), `ZONE ARTISANALE` and `Z A` (`ZA`), `ZONE D AMENAGEMENT CONCERTE` and `Z A C` (`ZAC`).
+  - Same outputs as version 0.2.5 of the Python port, [es-normalizer-py](https://github.com/cyrildever/es-normalizer-py).
+
+
 ## 2.4.0 (2026-10-20)
 
 Features:

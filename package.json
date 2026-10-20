@@ -1,6 +1,6 @@
 {
   "name": "es-normalizer",
-  "version": "2.4.0",
+  "version": "2.5.0",
   "description": "Contact data normalization adapted from the Empreinte Sociométrique's normalizers",
   "main": "dist/lib/src/typescript/index.js",
   "types": "dist/lib/src/typescript/index.d.ts",
