@@ -51,6 +51,16 @@ describe('Normalize', () => {
       normalized = normalize('Lieu-dit du domaine Vert', AddressLine())
       normalized.some().should.equal('LIEU DIT DOM VERT')
     })
+
+    it('should normalize the abbreviated forms of an address line', () => {
+      normalize('12 rond-point du Général de Gaulle', AddressLine()).some().should.equal('12 RPT GAL GAULLE')
+      normalize('Ctre Cial Leclerc', AddressLine()).some().should.equal('CCAL LECLERC')
+      normalize('Centre Commercial Grand Var', AddressLine()).some().should.equal('CCAL GD VAR')
+      normalize('Rue du Centre', AddressLine()).some().should.equal('RUE CENTRE')
+      normalize('Esplanade du Maréchal Foch', AddressLine()).some().should.equal('ESP MAL FOCH')
+      normalize('3 boul. du Docteur Roux', AddressLine()).some().should.equal('3 BD DR ROUX')
+      normalize('Paris Cx 09', AddressLine()).some().should.equal('PARIS CDX 09')
+    })
   })
 
   describe('AddressLine6', () => {

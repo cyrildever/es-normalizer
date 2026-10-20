@@ -6,11 +6,24 @@ export interface Dictionary {
   translateWord: (input: string) => string
 }
 
-const translateText = (set: DataSet) => (input: string): string =>
-  input.split(' ')
-    .map(translateWord(set))
-    .filter(str => str !== '')
-    .join(' ')
+// A key of several words translates them together, the longest first
+const translateText = (set: DataSet) => {
+  const phrases = Object.keys(set)
+    .filter(key => key.includes(' '))
+    .map(key => key.split(' '))
+    .sort((a, b) => b.length - a.length)
+  const translate = (words: Array<string>): Array<string> => {
+    if (words.length === 0) return []
+    const phrase = phrases.find(p => p.every((word, i) => words[i] === word))
+    return phrase !== undefined && set[phrase.join(' ')] !== undefined
+      ? [set[phrase.join(' ')], ...translate(words.slice(phrase.length))]
+      : [translateWord(set)(words[0]), ...translate(words.slice(1))]
+  }
+  return (input: string): string =>
+    translate(input.split(' '))
+      .filter(str => str !== '')
+      .join(' ')
+}
 
 const translateWord = (set: DataSet) => (input: string): string =>
   set[input] === undefined ? input : set[input]

@@ -112,6 +112,13 @@ npm i -g live-server
 ```
 
 
+### Python version
+
+The Python port lives at [cyrildever/es-normalizer-py](https://github.com/cyrildever/es-normalizer-py) and is published on PyPI as `es-normalizer-py`.
+Version `2.4.0` of this library initially matches its version `0.2.4`: both give the same outputs for the same inputs, and their dictionaries are the same.
+An address dictionary key may hold several words (eg. `CENTRE COMMERCIAL`), translated together before the single words, the longest first.
+
+
 ### License
 
 This module is distributed under a MIT license. \

@@ -1,5 +1,18 @@
 # CHANGELOG.md
 
+## 2.4.0 (2026-10-20)
+
+Features:
+
+  - The address dictionary accepts keys of several words, translated together before the single words, the longest first.
+  - New address forms: `DOCTEUR` (`DR`), `BOUL` (`BD`), `ESPLANADE` (`ESP`), `MARECHAL` (`MAL`), `ROND POINT`, `RONDPOINT` and `RDPT` (`RPT`), and the forms of a shopping centre (`CENTRE COMMERCIAL`, `CTRE CIAL`, `C CIAL`, `CCIAL`, etc.) as `CCAL`.
+  - Same outputs as version 0.2.4 of the Python port, [es-normalizer-py](https://github.com/cyrildever/es-normalizer-py).
+
+Fixes:
+
+  - The `CX` entry of the address dictionary misses its tab and translates nothing.
+
+
 ## 2.3.0 (2026-06-11)
 
 Features:
