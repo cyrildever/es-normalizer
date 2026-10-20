@@ -17,6 +17,15 @@ describe('Normalize', () => {
       const expected = 'CAFE ET CHOCOLAT'
       found.some().should.equal(expected)
     })
+    it('should spell out the ligatures', () => {
+      uniformize('Bœuf Lætitia ŒUVRE').some().should.equal('BOEUF LAETITIA OEUVRE')
+      uniformize('Albert 1ᵉʳ, Mᵐᵉ').some().should.equal('ALBERT 1ER MME')
+      uniformize('ﬁlature ﬂeurie').some().should.equal('FILATURE FLEURIE')
+      uniformize('Ｒｕｅ').some().should.equal('RUE')
+      uniformize('Nº 12').some().should.equal('N 12')
+      uniformize('№ 12').some().should.equal('N 12')
+      uniformize('N° 12').some().should.equal('N 12')
+    })
   })
 
   /* eslint-disable @typescript-eslint/no-unused-expressions */
@@ -68,6 +77,12 @@ describe('Normalize', () => {
       normalize('Zone d\'Aménagement Concerté de la Plaine', AddressLine()).some().should.equal('ZAC PLAINE')
       normalize('Promenade des Anglais', AddressLine()).some().should.equal('PROM ANGLAIS')
       normalize('4 Chaussée Jules César', AddressLine()).some().should.equal('4 CHS JULES CESAR')
+      normalize('67 Cr Gambetta', AddressLine()).some().should.equal('67 CRS GAMBETTA')
+      normalize('24 Av. du Gén de Gaulle', AddressLine()).some().should.equal('24 AV GAL GAULLE')
+      normalize('26 b Av. du Commandant Lisiack', AddressLine()).some().should.equal('26 B AV CDT LISIACK')
+      normalize('15 Parv. de la Défense', AddressLine()).some().should.equal('15 PRV DEFENSE')
+      normalize('2 A Montée de Saint-Menet', AddressLine()).some().should.equal('2 A MTE ST MENET')
+      normalize('3 Grand-Rue', AddressLine()).some().should.equal('3 GDE RUE')
     })
   })
 

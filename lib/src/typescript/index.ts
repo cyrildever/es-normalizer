@@ -3,12 +3,19 @@ import { Maybe, None, Some } from 'ts-utls'
 export const normalize = (data: string, normalizer: (d: string) => Maybe<string>): Maybe<string> => normalizer(data)
 
 export const uniformize = (data: string): Maybe<string> => {
-  const normalized = data.trim().toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+  // The compatibility decomposition spells out superscripts and typographic ligatures, eg. `1ᵉʳ` or `ﬁ`; `º` and `№` would become an `o`
+  const normalized = data.trim().toLowerCase()
+    .replace(/º/g, '°')
+    .replace(/№/g, 'n°')
+    .normalize('NFKD')
+    .replace(/[\u0300-\u036f]/g, '')
   if (normalized === '') {
     return None<string>()
   }
   const uniformized = normalized.replace(/ß/g, 'ss')
     .replace(/ø/g, 'o')
+    .replace(/œ/g, 'oe')
+    .replace(/æ/g, 'ae')
     .replace(/[^a-zA-Z0-9-]+/g, '-')
     .replace(/-+/g, '-')
     .replace(/-/g, ' ')
@@ -28,7 +35,7 @@ export const uniformize = (data: string): Maybe<string> => {
  * const maybeNormalized = esNormalizer.normalize('my data', esNormalizer.Any)
  * 
  * @param {string} data - The input to normalize
- * @returns {Maybe<string} Some NFD-normalized and upper-cased string if any.
+ * @returns {Maybe<string} Some NFKD-normalized and upper-cased string if any.
  * */
 export const Any = (data: string): Maybe<string> =>
   uniformize(data)

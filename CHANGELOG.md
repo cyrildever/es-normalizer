@@ -1,5 +1,15 @@
 # CHANGELOG.md
 
+## 2.6.0 (2026-10-20)
+
+Features:
+
+  - New address forms: `CR` (`CRS`), `GEN` (`GAL`), `COMMANDANT` (`CDT`), `PARVIS` and `PARV` (`PRV`), `MONTEE` and `MNT` (`MTE`), `GRAND RUE` (`GDE RUE`).
+  - `uniformize` spells out the `Œ` and `Æ` ligatures, eg. `Bœuf` becomes `BOEUF`.
+  - `uniformize` decomposes with NFKD, which spells out superscripts, typographic ligatures and fullwidth letters, eg. `1ᵉʳ` becomes `1ER` and `ﬁ` becomes `FI`; `Nº` and `№` read as `N°`.
+  - Same outputs as version 0.2.6 of the Python port, [es-normalizer-py](https://github.com/cyrildever/es-normalizer-py).
+
+
 ## 2.5.0 (2026-10-20)
 
 Features:
